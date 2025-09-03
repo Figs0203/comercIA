@@ -4,7 +4,7 @@ import time
 from django.conf import settings
 
 # Cargar settings de Django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "eafit_trade.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "comercia.settings")
 import django
 django.setup()
 

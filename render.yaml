@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: eafittrade
+    name: comercia
     env: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn eafit_trade.wsgi:application"
+    startCommand: "gunicorn comercia.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0

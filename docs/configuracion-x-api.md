@@ -16,7 +16,7 @@
 
 ## Paso 3: Configurar en Django
 
-Edita `eafit_trade/settings.py`:
+Edita `comercia/settings.py`:
 
 ```python
 # X API v2 configuration
