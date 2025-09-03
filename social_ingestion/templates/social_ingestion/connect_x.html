@@ -1,0 +1,25 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Conectar con X{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h1 class="h4 mb-3">Conectar con X</h1>
+  {% if existing %}
+    <div class="alert alert-success">Conectado como <strong>@{{ existing.username }}</strong>{% if existing.external_user_id %} (ID {{ existing.external_user_id }}){% endif %}</div>
+  {% else %}
+    <div class="alert alert-info">Aún no has conectado tu cuenta de X.</div>
+  {% endif %}
+
+  <form method="post" class="card p-3">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div>
+      <button type="submit" class="btn btn-primary">Guardar</button>
+      <a href="{% url 'view_profile' %}" class="btn btn-link">Volver a mi perfil</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,624 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+
+{% block title %}Vendedores - EAFIT Trade{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="section-header mb-4">
+        <h1 class="display-5 text-center fw-bold">Explora Nuestros Vendedores</h1>
+        <p class="text-center text-muted mb-0">Descubre la variedad de tiendas y productos disponibles en EAFIT Trade</p>
+    </div>
+    
+    <!-- Vendedores destacados como carousel -->
+    <div class="featured-vendors-section mb-5">
+        <h2 class="section-title mb-4 text-center fw-bold">Vendedores Más Populares</h2>
+        <div class="vendors-carousel-container">
+            <div class="vendors-carousel">
+                {% for seller in top_sellers %}
+                    <div class="vendor-card">
+                        <a href="{% url 'public_profile' seller.user.id %}" class="text-decoration-none">
+                            <div class="vendor-image-container">
+                                {% if seller.profile_image %}
+                                    <img src="{{ seller.profile_image.url }}" alt="{{ seller.store_name }}" class="vendor-image">
+                                {% else %}
+                                    <div class="vendor-image-placeholder">
+                                        <i class="fas fa-store"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <h3 class="vendor-name">{{ seller.store_name }}</h3>
+                            <div class="vendor-visits">
+                                <i class="fas fa-eye"></i> {{ seller.clicks.count }} visitas
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="carousel-buttons">
+                <button type="button" class="btn carousel-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button type="button" class="btn carousel-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Barra de búsqueda mejorada -->
+    <div class="search-container mb-4">
+        <form method="get" id="searchForm">
+            <div class="search-bar-wrapper">
+                <div class="row g-3 align-items-center justify-content-center">
+                    <!-- Barra de búsqueda -->
+                    <div class="col-md-8 col-lg-6">
+                        <div class="search-input-container">
+                            <input type="text" 
+                                name="search" 
+                                class="form-control search-input"
+                                placeholder="Buscar vendedores..."
+                                value="{{ search_query }}">
+                            <button type="submit" class="btn btn-primary search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Botón de filtros -->
+                    <div class="col-auto">
+                        <button class="btn btn-outline-primary filter-toggle-btn" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#filterOptions" 
+                                aria-expanded="false" 
+                                aria-controls="filterOptions">
+                            <i class="fas fa-filter me-2"></i>Filtros
+                            {% if selected_categories %}
+                                <span class="badge bg-primary ms-2">{{ selected_categories|length }}</span>
+                            {% endif %}
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Opciones de filtro colapsables -->
+                <div class="collapse mt-4" id="filterOptions">
+                    <div class="filter-card">
+                        <div class="filter-card-header">
+                            <i class="fas fa-tags me-2"></i>Filtrar por categorías de productos
+                        </div>
+                        <div class="filter-card-body">
+                            <div class="category-selection">
+                                <select name="categories" class="form-select" multiple size="5">
+                                    {% for category in all_categories %}
+                                        <option value="{{ category }}" 
+                                                {% if category in selected_categories %}selected{% endif %}>
+                                            {{ category }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-text mb-3">Selecciona múltiples categorías con la tecla Ctrl</div>
+                            </div>
+                            <div class="filter-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check me-2"></i>Aplicar filtros
+                                </button>
+                                <a href="{% url 'seller_list' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-undo me-2"></i>Limpiar filtros
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Grid de vendedores -->
+    <div class="row g-4">
+        {% for seller_data in sellers %}
+            <div class="col-md-6 col-lg-4">
+                <a href="{% url 'public_profile' seller_data.profile.user.id %}" class="text-decoration-none">
+                    <div class="seller-card">
+                        <div class="seller-header">
+                            <div class="seller-image-container">
+                                {% if seller_data.profile.profile_image %}
+                                    <img src="{{ seller_data.profile.profile_image.url }}" 
+                                         alt="{{ seller_data.profile.store_name }}"
+                                         class="seller-image">
+                                {% else %}
+                                    <div class="seller-image-placeholder">
+                                        <i class="fas fa-store"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="seller-content">
+                            <h3 class="seller-name">{{ seller_data.profile.store_name }}</h3>
+                            {% if seller_data.profile.slogan %}
+                                <p class="seller-slogan">{{ seller_data.profile.slogan }}</p>
+                            {% endif %}
+                            
+                            <!-- Categorías de productos -->
+                            {% if seller_data.categories %}
+                                <div class="seller-categories">
+                                    {% for category in seller_data.categories %}
+                                        <span class="category-badge">{{ category }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <div class="col-12 empty-state">
+                <i class="fas fa-store-alt-slash"></i>
+                <h3>No se encontraron vendedores</h3>
+                {% if search_query or selected_categories %}
+                    <p>Intenta con otros términos de búsqueda o filtros</p>
+                    <a href="{% url 'seller_list' %}" class="btn btn-outline-primary mt-3">
+                        <i class="fas fa-undo me-2"></i>Ver todos los vendedores
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    /* Estilos para título de sección */
+    .section-header {
+        margin-bottom: 2.5rem;
+    }
+    
+    .section-header h1 {
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        color: #2c3e50;
+    }
+    
+    /* Barra de búsqueda estilizada */
+    .search-container {
+        margin-bottom: 2.5rem;
+    }
+    
+    .search-input-container {
+        position: relative;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        border-radius: 50px;
+        overflow: hidden;
+    }
+    
+    .search-input {
+        height: 56px;
+        border-radius: 50px;
+        padding-left: 1.5rem;
+        padding-right: 4rem;
+        font-size: 1rem;
+        border: none;
+    }
+    
+    .search-input:focus {
+        box-shadow: none;
+        border: 1px solid var(--primary-color);
+    }
+    
+    .search-btn {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        border-radius: 50px;
+        width: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .filter-toggle-btn {
+        height: 56px;
+        border-radius: 50px;
+        font-weight: 500;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+    }
+    
+    .filter-toggle-btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .filter-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+    
+    .filter-card-header {
+        background-color: rgba(0,0,0,0.02);
+        padding: 1.25rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        color: #4a5568;
+    }
+    
+    .filter-card-body {
+        padding: 1.5rem;
+    }
+    
+    .category-selection .form-select {
+        border-radius: 0.5rem;
+    }
+    
+    .filter-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    /* Tarjetas de vendedor */
+    .seller-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .seller-card:hover {
+        transform: translateY(-7px);
+        box-shadow: var(--hover-shadow);
+    }
+    
+    .seller-header {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .seller-image-container {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+    }
+    
+    .seller-image {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .seller-image-placeholder {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        border: 4px solid white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .seller-content {
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .seller-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+    
+    .seller-slogan {
+        font-size: 0.95rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 2.8rem;
+    }
+    
+    .seller-categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+    
+    .category-badge {
+        display: inline-block;
+        padding: 0.3rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background-color: #f0f4f8;
+        color: var(--primary-color);
+        margin-bottom: 0.25rem;
+        transition: all 0.2s ease;
+    }
+    
+    .category-badge:hover {
+        background-color: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    /* Estado vacío */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 1rem;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: #cbd5e0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #4a5568;
+    }
+    
+    .empty-state p {
+        font-size: 1.1rem;
+        color: #718096;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Estilos para el carrusel de vendedores destacados */
+    .featured-vendors-section {
+        margin-bottom: 3rem;
+        padding: 2rem 0;
+        background: linear-gradient(to right, #f8f9fa, #e2e8f0, #f8f9fa);
+        border-radius: var(--border-radius);
+    }
+
+    .featured-vendors-section h2 {
+        color: #1a365d;
+    }
+
+    .vendors-carousel-container {
+        position: relative;
+        padding: 0 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .vendors-carousel {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        gap: 1rem;
+        padding: 1.5rem 0;
+        margin: 0 -10px;
+        scrollbar-width: none; /* Firefox */
+        justify-content: space-between;
+    }
+
+    .vendors-carousel::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+
+    .vendor-card {
+        flex: 0 0 18%;
+        min-width: 180px;
+        max-width: 220px;
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s;
+        padding: 1.5rem;
+        text-align: center;
+        margin: 0 0.5%;
+    }
+
+    .vendor-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .vendor-image-container {
+        width: 110px;
+        height: 110px;
+        margin: 0 auto 1rem;
+    }
+
+    .vendor-image {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .vendor-image-placeholder {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        border: 4px solid white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .vendor-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.75rem;
+    }
+
+    .vendor-visits {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .carousel-buttons {
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    .carousel-prev, .carousel-next {
+        background: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        cursor: pointer;
+        color: var(--primary-color);
+        pointer-events: auto;
+        transition: all 0.3s;
+    }
+
+    .carousel-prev:hover, .carousel-next:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .carousel-prev {
+        margin-left: 10px;
+    }
+
+    .carousel-next {
+        margin-right: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .vendor-card {
+            flex: 0 0 22%;
+            min-width: 160px;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .vendor-card {
+            flex: 0 0 30%;
+            min-width: 150px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .vendor-card {
+            flex: 0 0 45%;
+            min-width: 140px;
+            margin: 0 0.25rem;
+        }
+        
+        .vendor-image-container {
+            width: 90px;
+            height: 90px;
+        }
+        
+        .carousel-buttons {
+            display: none; /* Ocultar botones en móvil para facilitar el deslizamiento táctil */
+        }
+        
+        .vendors-carousel-container {
+            padding: 0;
+        }
+        
+        .vendors-carousel {
+            padding: 1rem 0.5rem;
+            gap: 0.5rem;
+            justify-content: flex-start;
+            overflow-x: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .vendor-card {
+            flex: 0 0 80%;
+            min-width: 170px;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Carousel navigation
+    var carousel = document.querySelector('.vendors-carousel');
+    var prevBtn = document.querySelector('.carousel-prev');
+    var nextBtn = document.querySelector('.carousel-next');
+    
+    if (prevBtn) {
+        prevBtn.onclick = function() {
+            if (carousel) {
+                // Calculate scroll amount based on the width of the carousel
+                var scrollAmount = Math.max(carousel.offsetWidth / 2, 350);
+                carousel.scrollLeft = carousel.scrollLeft - scrollAmount;
+            }
+        };
+    }
+    
+    if (nextBtn) {
+        nextBtn.onclick = function() {
+            if (carousel) {
+                // Calculate scroll amount based on the width of the carousel
+                var scrollAmount = Math.max(carousel.offsetWidth / 2, 350);
+                carousel.scrollLeft = carousel.scrollLeft + scrollAmount;
+            }
+        };
+    }
+    
+    // Initially position all cards to be visible
+    if (carousel && carousel.children.length > 0) {
+        // Ensure all vendors are evenly distributed
+        var totalWidth = carousel.offsetWidth;
+        var cardWidth = carousel.children[0].offsetWidth;
+        var totalCards = carousel.children.length;
+        
+        // Add appropriate styling if needed
+        if (totalCards <= 5) {
+            carousel.style.justifyContent = 'space-evenly';
+        }
+    }
+    
+    // Filters
+    var filterOptions = document.getElementById('filterOptions');
+    
+    // Show filters if categories are selected
+    {% if selected_categories %}
+        if (filterOptions) {
+            filterOptions.classList.add('show');
+        }
+    {% endif %}
+});
+</script>
+{% endblock %} 

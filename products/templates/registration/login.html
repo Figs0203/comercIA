@@ -1,0 +1,239 @@
+{% extends 'products/base.html' %}
+{% load static %}
+{% load form_tags %}
+
+{% block title %}Iniciar Sesión - EAFIT Trade{% endblock %}
+
+{% block extra_styles %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    
+    .auth-container {
+        min-height: calc(100vh - 56px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
+    
+    .auth-card {
+        width: 100%;
+        max-width: 900px;
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: row;
+    }
+    
+    .auth-image {
+        flex: 1;
+        background: var(--primary-color);
+        background-image: url('https://images.unsplash.com/photo-1577563908411-5077b6dc7624?q=80&w=1470&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .auth-image::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(13, 110, 253, 0.8);
+    }
+    
+    .auth-image-content {
+        position: relative;
+        z-index: 1;
+        color: white;
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .auth-image-content h2 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .auth-image-content p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        max-width: 80%;
+        margin: 0 auto;
+    }
+    
+    .auth-form {
+        flex: 1;
+        padding: 3rem;
+    }
+    
+    .auth-form h1 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 2.2rem;
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    
+    .auth-form .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #4a5568;
+    }
+    
+    .auth-form .form-control {
+        height: 52px;
+        padding: 0.75rem 1.25rem;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        font-size: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        transition: all 0.3s ease;
+    }
+    
+    .auth-form .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+    }
+    
+    .auth-btn {
+        height: 52px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .auth-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+    }
+    
+    .forgot-password {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-block;
+        margin: 1rem 0;
+        transition: all 0.2s ease;
+    }
+    
+    .forgot-password:hover {
+        color: #0b5ed7;
+        text-decoration: underline;
+    }
+    
+    .auth-footer {
+        text-align: center;
+        margin-top: 2rem;
+    }
+    
+    .auth-footer a {
+        color: var(--primary-color);
+        font-weight: 600;
+        text-decoration: none;
+    }
+    
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+        .auth-card {
+            flex-direction: column;
+            max-width: 500px;
+        }
+        
+        .auth-image {
+            display: none;
+        }
+        
+        .auth-form {
+            padding: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-image">
+            <div class="auth-image-content">
+                <h2>¡Bienvenido de vuelta!</h2>
+                <p>Accede a tu cuenta para comprar y vender productos en la comunidad EAFIT TRADE.</p>
+            </div>
+        </div>
+        
+        <div class="auth-form">
+            <h1>Iniciar Sesión</h1>
+            
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>El nombre de usuario o contraseña no son correctos. Intenta nuevamente.
+                    </div>
+                {% endif %}
+                
+                <div class="mb-4">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
+                    {{ form.username|addclass:"form-control" }}
+                    {% if form.username.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.username.errors|join:", " }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-4">
+                    <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+                    {{ form.password|addclass:"form-control" }}
+                    {% if form.password.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.password.errors|join:", " }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                {% endif %}
+                
+                <div class="d-flex justify-content-end mb-3">
+                    <a href="{% url 'password_reset' %}" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary auth-btn">
+                    <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                </button>
+                
+                <div class="auth-footer">
+                    <p>¿No tienes una cuenta? <a href="{% url 'register' %}">Regístrate ahora</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

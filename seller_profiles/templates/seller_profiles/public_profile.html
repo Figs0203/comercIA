@@ -1,0 +1,308 @@
+{% extends 'seller_profiles/profile_base.html' %}
+{% load humanize %}
+
+{% block content %}
+<section class="profile-section py-5">
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-image-wrapper">
+                    {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image.url }}" alt="{{ profile.store_name }}" class="profile-image">
+                    {% else %}
+                        <div class="profile-image d-flex align-items-center justify-content-center bg-secondary">
+                            <i class="fas fa-store fa-3x text-white"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <h1 class="store-name">{{ profile.store_name }}</h1>
+                {% if profile.slogan %}
+                    <p class="store-slogan">{{ profile.slogan }}</p>
+                {% endif %}
+                {% if profile.whatsapp %}
+                    <a href="{{ profile.get_whatsapp_link }}" 
+                       class="btn btn-success btn-action whatsapp-button fixed-whatsapp"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        <i class="fab fa-whatsapp me-2"></i>Contactar por WhatsApp
+                    </a>
+                {% endif %}
+            </div>
+            
+            <div class="profile-body">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <i class="fas fa-info-circle me-2"></i>Descripción
+                            </div>
+                            <div class="info-card-body">
+                                <p class="lead mb-0">{{ profile.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <i class="fas fa-clock me-2"></i>Horario de Atención
+                            </div>
+                            <div class="info-card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table schedule-table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Día</th>
+                                                <th>Horario</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for schedule in ordered_schedules %}
+                                            <tr>
+                                                <td>{{ schedule.get_day_display }}</td>
+                                                <td>
+                                                    {% if schedule.is_available %}
+                                                        <span class="text-success">
+                                                            <i class="fas fa-clock me-2"></i>
+                                                            {{ schedule.start_time|time:"H:i" }} - {{ schedule.end_time|time:"H:i" }}
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="text-muted">
+                                                            <i class="fas fa-times-circle me-2"></i>
+                                                            No disponible
+                                                        </span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-muted mt-2">
+                    <i class="fas fa-eye me-1"></i>
+                    {{ total_clicks }} personas han visto este perfil.
+                </p>
+
+                <!-- Sección de productos del vendedor -->
+                <div class="seller-products mt-5">
+                    <h2 class="section-title">
+                        <i class="fas fa-box me-2"></i>Productos de {{ profile.store_name }}
+                    </h2>
+                    
+                    <div class="row g-4 mt-3">
+                        {% for product in profile.user.products.all %}
+                            {% if product.available %}
+                                <div class="col-md-6 col-lg-4 col-xl-3">
+                                    <a href="{% url 'product_detail' product.id %}" class="text-decoration-none">
+                                        <div class="product-card">
+                                            <div class="product-image-container">
+                                                {% if product.image %}
+                                                    <img src="{{ product.image.url }}" class="product-image" alt="{{ product.name }}">
+                                                {% endif %}
+                                                <div class="product-category">{{ product.get_category_display }}</div>
+                                            </div>
+                                            <div class="product-details">
+                                                <h3 class="product-title">{{ product.name }}</h3>
+                                                <div class="product-price">$ {{ product.price|floatformat:0|intcomma }}</div>
+                                                <div class="view-details mt-3">Ver detalles</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            <div class="col-12 empty-products">
+                                <i class="fas fa-box-open"></i>
+                                <p>Este vendedor aún no tiene productos disponibles.</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Estilos para productos */
+    .section-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid rgba(0,0,0,0.05);
+    }
+    
+    .product-card {
+        background: white;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        height: 100%;
+        transition: all 0.3s;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+    }
+    
+    .product-image-container {
+        position: relative;
+        padding-top: 75%; /* 4:3 aspect ratio */
+        overflow: hidden;
+    }
+    
+    .product-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .product-category {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255,255,255,0.9);
+        padding: 0.3rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    
+    .product-details {
+        padding: 1.25rem;
+    }
+    
+    .product-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 2.8rem;
+    }
+    
+    .product-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+    
+    .view-details {
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        background-color: #f8f9fa;
+        transition: all 0.2s;
+    }
+    
+    .product-card:hover .view-details {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    .empty-products {
+        text-align: center;
+        padding: 4rem 1rem;
+    }
+    
+    .empty-products i {
+        font-size: 4rem;
+        color: #cbd5e0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .empty-products p {
+        font-size: 1.1rem;
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+    }
+
+    .whatsapp-button {
+        background-color: #25D366;
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+    }
+
+    .whatsapp-button:hover {
+        background-color: #128C7E;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
+    }
+
+    .whatsapp-button i {
+        font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+        .whatsapp-button {
+            width: 100%;
+            margin-top: 1rem;
+        }
+    }
+
+    .fixed-whatsapp {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        background-color: #25D366;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-weight: 500;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        text-decoration: none;
+    }
+
+    .fixed-whatsapp:hover {
+        background-color: #128C7E;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    }
+
+    .fixed-whatsapp i {
+        font-size: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .fixed-whatsapp {
+            bottom: 1rem;
+            right: 1rem;
+            left: 1rem;
+            width: calc(100% - 2rem);
+        }
+    }
+</style>
+{% endblock %} 

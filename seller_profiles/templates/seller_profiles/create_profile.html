@@ -1,0 +1,375 @@
+{% extends 'seller_profiles/profile_base.html' %}
+
+{% block content %}
+<section class="profile-section py-5">
+    <div class="container">
+        <div class="form-section">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <h2 class="mb-0">
+                        <i class="fas fa-store-alt me-2"></i>Crear Perfil de Vendedor
+                    </h2>
+                    <p class="mt-3 mb-0 text-white-50">Completa los siguientes datos para comenzar a vender tus productos</p>
+                </div>
+                
+                <div class="profile-body">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Imagen de perfil -->
+                        <div class="mb-4">
+                            <label for="{{ form.profile_image.id_for_label }}" class="form-label">
+                                {{ form.profile_image.label }}
+                            </label>
+                            <div class="input-file-container">
+                                {{ form.profile_image }}
+                                <div class="input-file-placeholder">
+                                    <i class="fas fa-cloud-upload-alt me-2"></i>Selecciona una imagen
+                                </div>
+                            </div>
+                            {% if form.profile_image.help_text %}
+                                <div class="form-text">{{ form.profile_image.help_text }}</div>
+                            {% endif %}
+                            {% if form.profile_image.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.profile_image.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Nombre de la tienda -->
+                        <div class="mb-4">
+                            <label for="{{ form.store_name.id_for_label }}" class="form-label">
+                                {{ form.store_name.label }}
+                            </label>
+                            {{ form.store_name }}
+                            {% if form.store_name.help_text %}
+                                <div class="form-text">{{ form.store_name.help_text }}</div>
+                            {% endif %}
+                            {% if form.store_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.store_name.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Slogan -->
+                        <div class="mb-4">
+                            <label for="{{ form.slogan.id_for_label }}" class="form-label">
+                                {{ form.slogan.label }}
+                            </label>
+                            {{ form.slogan }}
+                            {% if form.slogan.help_text %}
+                                <div class="form-text">{{ form.slogan.help_text }}</div>
+                            {% endif %}
+                            {% if form.slogan.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.slogan.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Descripción -->
+                        <div class="mb-4">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">
+                                {{ form.description.label }}
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.help_text %}
+                                <div class="form-text">{{ form.description.help_text }}</div>
+                            {% endif %}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.description.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- WhatsApp -->
+                        <div class="mb-4">
+                            <label for="{{ form.whatsapp.id_for_label }}" class="form-label">
+                                {{ form.whatsapp.label }}
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white">
+                                    <i class="fab fa-whatsapp text-success"></i>
+                                </span>
+                                {{ form.whatsapp }}
+                            </div>
+                            {% if form.whatsapp.help_text %}
+                                <div class="form-text">{{ form.whatsapp.help_text }}</div>
+                            {% endif %}
+                            {% if form.whatsapp.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.whatsapp.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Horarios -->
+                        <div class="schedule-formset bg-light p-4 rounded-4 mt-5">
+                            <h3 class="fw-semibold mb-4 fs-4">
+                                <i class="fas fa-clock me-2"></i>Horario de Atención
+                            </h3>
+                            {{ schedule_formset.management_form }}
+                            
+                            <div class="row g-4">
+                                {% for form in schedule_formset %}
+                                    <div class="col-md-6">
+                                        <div class="card schedule-card h-100">
+                                            <div class="card-body">
+                                                {{ form.day }}
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="fw-semibold mb-0">{{ form.day.value }}</h5>
+                                                    <div class="form-check form-switch">
+                                                        {{ form.is_available }}
+                                                        <label class="form-check-label ms-2" for="{{ form.is_available.id_for_label }}">
+                                                            Disponible
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="schedule-times" data-available="{{ form.is_available.value|yesno:'true,false' }}">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">
+                                                                <i class="fas fa-sun me-1 text-warning"></i>Hora de inicio
+                                                            </label>
+                                                            <div class="input-group">
+                                                                {{ form.start_time }}
+                                                            </div>
+                                                            <small class="form-text text-muted">Entre 6:00 AM y 10:00 PM</small>
+                                                            {% if form.start_time.errors %}
+                                                                <div class="invalid-feedback d-block">
+                                                                    {{ form.start_time.errors|join:", " }}
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">
+                                                                <i class="fas fa-moon me-1 text-primary"></i>Hora de cierre
+                                                            </label>
+                                                            <div class="input-group">
+                                                                {{ form.end_time }}
+                                                            </div>
+                                                            <small class="form-text text-muted">Entre 6:00 AM y 10:00 PM</small>
+                                                            {% if form.end_time.errors %}
+                                                                <div class="invalid-feedback d-block">
+                                                                    {{ form.end_time.errors|join:", " }}
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                                <i class="fas fa-save me-2"></i>Crear Perfil
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .input-file-container {
+        position: relative;
+    }
+    
+    .input-file-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        background-color: white;
+        border: 1px solid #dee2e6;
+        border-radius: var(--input-radius);
+        pointer-events: none;
+        color: #6c757d;
+    }
+    
+    input[type="file"] {
+        opacity: 0;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 46px;
+        cursor: pointer;
+    }
+    
+    input[type="file"]:focus + .input-file-placeholder {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(13,110,253,0.15);
+    }
+      .schedule-card {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .schedule-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .schedule-times[data-available="false"] {
+        opacity: 0.5;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .form-switch {
+        padding-left: 2.5em;
+    }
+
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+        margin-left: -2.5em;
+        background-color: #e9ecef;
+        border-color: #dee2e6;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .form-switch .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .form-control[type="time"] {
+        padding: 0.6rem 1rem;
+        width: 100%;
+        border-radius: 0.5rem;
+        border: 1px solid #dee2e6;
+        font-size: 1rem;
+        background-color: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .form-control[type="time"]:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
+    }
+
+    .schedule-formset .card-body {
+        padding: 1.5rem;
+    }
+
+    .form-text {
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Manejar visualización del nombre del archivo
+    const fileInput = document.querySelector('input[type="file"]');
+    const placeholder = document.querySelector('.input-file-placeholder');
+    
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            placeholder.innerHTML = `<i class="fas fa-check me-2 text-success"></i>${this.files[0].name}`;
+        } else {
+            placeholder.innerHTML = `<i class="fas fa-cloud-upload-alt me-2"></i>Selecciona una imagen`;
+        }
+    });
+    
+    // Manejar horarios
+    const scheduleCards = document.querySelectorAll('.schedule-card');
+    
+    scheduleCards.forEach(card => {
+        const toggle = card.querySelector('.form-check-input');
+        const timesContainer = card.querySelector('.schedule-times');
+        const startTimeInput = card.querySelector('input[name*="start_time"]');
+        const endTimeInput = card.querySelector('input[name*="end_time"]');
+        
+        function updateTimeRange() {
+            const startTime = startTimeInput.value;
+            if (startTime) {
+                // Asegurar que la hora de cierre sea al menos 30 minutos después de la hora de inicio
+                const startDate = new Date(`2000-01-01T${startTime}`);
+                startDate.setMinutes(startDate.getMinutes() + 30);
+                const minEndTime = startDate.toTimeString().slice(0, 5);
+                
+                endTimeInput.min = minEndTime;
+                if (endTimeInput.value && endTimeInput.value <= startTime) {
+                    endTimeInput.value = minEndTime;
+                }
+            }
+        }
+        
+        function updateTimeInputs() {
+            const isAvailable = toggle.checked;
+            timesContainer.dataset.available = isAvailable;
+            
+            [startTimeInput, endTimeInput].forEach(input => {
+                input.required = isAvailable;
+                if (!isAvailable) {
+                    input.value = '';
+                }
+            });
+            
+            if (isAvailable && !startTimeInput.value) {
+                startTimeInput.value = '08:00'; // Hora por defecto
+                updateTimeRange();
+            }
+            if (isAvailable && !endTimeInput.value) {
+                endTimeInput.value = '17:00'; // Hora por defecto
+            }
+        }
+        
+        // Eventos
+        toggle.addEventListener('change', updateTimeInputs);
+        startTimeInput.addEventListener('change', updateTimeRange);
+        
+        // Inicializar estado
+        updateTimeInputs();
+    });
+});    // Configuración de Flatpickr para los campos de hora
+    document.querySelectorAll('input[type="time"]').forEach(function(input) {
+        input.setAttribute('placeholder', 'Selecciona hora');
+        flatpickr(input, {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true,
+            minTime: "06:00",
+            maxTime: "22:00",
+            minuteIncrement: 30,
+            allowInput: true,
+            clickOpens: true,
+            defaultHour: input.id.includes('start_time') ? 8 : 17,
+            onChange: function(selectedDates, dateStr) {
+                // Validar el rango de horas
+                const hour = parseInt(dateStr.split(':')[0]);
+                if (hour < 6 || hour >= 22) {
+                    alert('Por favor selecciona una hora entre las 6:00 AM y las 10:00 PM');
+                    this.clear();
+                }
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

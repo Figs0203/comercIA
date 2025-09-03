@@ -1,0 +1,337 @@
+{% extends 'seller_profiles/profile_base.html' %}
+
+{% block content %}
+<section class="profile-section py-5">
+    <div class="container">
+        <div class="form-section">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <h2 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>Editar Perfil de Vendedor
+                    </h2>
+                    <p class="mt-3 mb-0 text-white-50">Actualiza tu información como vendedor</p>
+                </div>
+                
+                <div class="profile-body">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Imagen de perfil -->
+                        <div class="mb-4">
+                            <label class="form-label">{{ form.profile_image.label }}</label>
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="input-file-container">
+                                        {{ form.profile_image }}
+                                        <div class="input-file-placeholder">
+                                            <i class="fas fa-cloud-upload-alt me-2"></i>
+                                            {% if profile.profile_image %}
+                                                Cambiar imagen
+                                            {% else %}
+                                                Seleccionar imagen
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if profile.profile_image %}
+                                    <div class="col-md-4">
+                                        <div class="current-image">
+                                            <p class="small text-muted mb-2">Imagen actual:</p>
+                                            <img src="{{ profile.profile_image.url }}" alt="Perfil" class="img-thumbnail rounded-3" style="max-width: 100%; height: auto;">
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Nombre de la tienda -->
+                        <div class="mb-4">
+                            <label class="form-label">{{ form.store_name.label }}</label>
+                            {{ form.store_name }}
+                            {% if form.store_name.help_text %}
+                                <div class="form-text">{{ form.store_name.help_text }}</div>
+                            {% endif %}
+                            {% if form.store_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.store_name.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Slogan -->
+                        <div class="mb-4">
+                            <label class="form-label">{{ form.slogan.label }}</label>
+                            {{ form.slogan }}
+                            {% if form.slogan.help_text %}
+                                <div class="form-text">{{ form.slogan.help_text }}</div>
+                            {% endif %}
+                            {% if form.slogan.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.slogan.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Descripción -->
+                        <div class="mb-4">
+                            <label class="form-label">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            {% if form.description.help_text %}
+                                <div class="form-text">{{ form.description.help_text }}</div>
+                            {% endif %}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.description.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- WhatsApp -->
+                        <div class="mb-4">
+                            <label class="form-label">{{ form.whatsapp.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white">
+                                    <i class="fab fa-whatsapp text-success"></i>
+                                </span>
+                                {{ form.whatsapp }}
+                            </div>
+                            {% if form.whatsapp.help_text %}
+                                <div class="form-text">{{ form.whatsapp.help_text }}</div>
+                            {% endif %}
+                            {% if form.whatsapp.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.whatsapp.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Horarios -->
+                        <div class="schedule-formset bg-light p-4 rounded-4 mt-5">
+                            <h3 class="fw-semibold mb-4 fs-4">
+                                <i class="fas fa-clock me-2"></i>Horario de Atención
+                            </h3>
+                            {{ schedule_formset.management_form }}
+                            
+                            <div class="row g-4">
+                                {% for schedule_form in schedule_formset %}
+                                    <div class="col-md-6">
+                                        <div class="card schedule-card h-100">
+                                            <div class="card-body">
+                                                {{ schedule_form.id }}
+                                                {{ schedule_form.day }}
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="fw-semibold mb-0">{{ schedule_form.day.value }}</h5>
+                                                    <div class="form-check form-switch">
+                                                        {{ schedule_form.is_available }}
+                                                        <label class="form-check-label ms-2" for="{{ schedule_form.is_available.id_for_label }}">
+                                                            Disponible
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                  <div class="schedule-times" data-available="{{ schedule_form.is_available.value|yesno:'true,false' }}">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">
+                                                                <i class="fas fa-sun me-1 text-warning"></i>Hora de inicio
+                                                            </label>
+                                                            <div class="input-group">
+                                                                {{ schedule_form.start_time }}
+                                                            </div>
+                                                            <small class="form-text text-muted">Entre 6:00 AM y 9:30 PM</small>
+                                                            {% if schedule_form.start_time.errors %}
+                                                                <div class="invalid-feedback d-block">
+                                                                    {{ schedule_form.start_time.errors|join:", " }}
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">
+                                                                <i class="fas fa-moon me-1 text-primary"></i>Hora de cierre
+                                                            </label>
+                                                            <div class="input-group">
+                                                                {{ schedule_form.end_time }}
+                                                            </div>
+                                                            <small class="form-text text-muted">Entre 6:30 AM y 10:00 PM</small>
+                                                            {% if schedule_form.end_time.errors %}
+                                                                <div class="invalid-feedback d-block">
+                                                                    {{ schedule_form.end_time.errors|join:", " }}
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-3 mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            </button>
+                            <a href="{% url 'view_profile' %}" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .input-file-container {
+        position: relative;
+    }
+    
+    .input-file-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        background-color: white;
+        border: 1px solid #dee2e6;
+        border-radius: var(--input-radius);
+        pointer-events: none;
+        color: #6c757d;
+    }
+    
+    input[type="file"] {
+        opacity: 0;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 46px;
+        cursor: pointer;
+    }
+    
+    input[type="file"]:focus + .input-file-placeholder {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(13,110,253,0.15);
+    }
+    
+    .current-image {
+        padding: 1rem;
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .schedule-card {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .schedule-times[data-available="false"] {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .form-switch {
+        padding-left: 2.5em;
+    }
+
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+        margin-left: -2.5em;
+        background-color: #e9ecef;
+        border-color: #dee2e6;
+    }
+
+    .form-switch .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .form-control[type="time"] {
+        padding: 0.6rem 1rem;
+        width: 100%;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Manejar visualización del nombre del archivo
+    const fileInput = document.querySelector('input[type="file"]');
+    const placeholder = document.querySelector('.input-file-placeholder');
+    
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            placeholder.innerHTML = `<i class="fas fa-check me-2 text-success"></i>${this.files[0].name}`;
+        } else {
+            placeholder.innerHTML = `<i class="fas fa-cloud-upload-alt me-2"></i>Cambiar imagen`;
+        }
+    });    // Manejar horarios
+    const scheduleCards = document.querySelectorAll('.schedule-card');
+    
+    scheduleCards.forEach(card => {
+        const toggle = card.querySelector('.form-check-input');
+        const timesContainer = card.querySelector('.schedule-times');
+        const startTimeSelect = card.querySelector('select[name*="start_time"]');
+        const endTimeSelect = card.querySelector('select[name*="end_time"]');
+        
+        function updateEndTimeOptions() {
+            const startTime = startTimeSelect.value;
+            const endTimeOptions = endTimeSelect.options;
+            
+            // Habilitar todas las opciones primero
+            Array.from(endTimeOptions).forEach(option => {
+                option.disabled = false;
+            });
+            
+            if (startTime) {
+                // Deshabilitar opciones de cierre que sean antes o iguales a la hora de inicio
+                Array.from(endTimeOptions).forEach(option => {
+                    if (option.value && option.value <= startTime) {
+                        option.disabled = true;
+                    }
+                });
+                
+                // Si la hora de cierre seleccionada no es válida, seleccionar la siguiente disponible
+                if (endTimeSelect.value <= startTime) {
+                    const nextValidOption = Array.from(endTimeOptions).find(option => 
+                        option.value > startTime && !option.disabled
+                    );
+                    if (nextValidOption) {
+                        endTimeSelect.value = nextValidOption.value;
+                    }
+                }
+            }
+        }
+        
+        function updateTimeInputs() {
+            const isAvailable = toggle.checked;
+            timesContainer.dataset.available = isAvailable;
+            
+            [startTimeSelect, endTimeSelect].forEach(select => {
+                select.required = isAvailable;
+                if (!isAvailable) {
+                    select.value = '';
+                }
+            });
+            
+            if (isAvailable) {
+                updateEndTimeOptions();
+            }
+        }
+        
+        // Eventos
+        toggle.addEventListener('change', updateTimeInputs);
+        startTimeSelect.addEventListener('change', updateEndTimeOptions);
+        
+        // Inicializar estado
+        updateTimeInputs();
+    });
+});
+</script>
+{% endblock %} 

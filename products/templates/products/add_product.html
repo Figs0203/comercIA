@@ -1,0 +1,250 @@
+{% extends 'products/base.html' %}
+{% load form_tags %}
+
+{% block title %}Agregar Producto - EAFIT Trade{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <div class="card form-card">
+                    <div class="card-header text-center">
+                        <h2 class="mb-0 fw-bold">
+                            <i class="fas fa-plus-circle me-2"></i>Agregar Producto
+                        </h2>
+                        <p class="text-muted mt-2 mb-0">Completa el formulario para publicar tu producto</p>
+                    </div>
+                    
+                    <div class="card-body p-4 p-lg-5">
+                        <form method="post" enctype="multipart/form-data" novalidate>
+                            {% csrf_token %}
+                            
+                            <!-- Nombre del producto -->
+                            <div class="mb-4">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">
+                                    {{ form.name.label }}
+                                </label>
+                                {{ form.name|addclass:"form-control" }}
+                                {% if form.name.help_text %}
+                                    <div class="form-text">{{ form.name.help_text }}</div>
+                                {% endif %}
+                                {% if form.name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.name.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Categoría -->
+                            <div class="mb-4">
+                                <label for="{{ form.category.id_for_label }}" class="form-label">
+                                    {{ form.category.label }}
+                                </label>
+                                {{ form.category|addclass:"form-control" }}
+                                {% if form.category.help_text %}
+                                    <div class="form-text">{{ form.category.help_text }}</div>
+                                {% endif %}
+                                {% if form.category.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.category.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Tipo de Comida (campo dinámico) -->
+                            <div class="mb-4 dynamic-field" id="food-type-field">
+                                <label for="{{ form.food_type.id_for_label }}" class="form-label">
+                                    {{ form.food_type.label }} *
+                                </label>
+                                {{ form.food_type|addclass:"form-control" }}
+                                {% if form.food_type.help_text %}
+                                    <div class="form-text">{{ form.food_type.help_text }}</div>
+                                {% endif %}
+                                {% if form.food_type.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.food_type.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Estado del producto (campo dinámico) -->
+                            <div class="mb-4 dynamic-field" id="condition-field">
+                                <label for="{{ form.condition.id_for_label }}" class="form-label">
+                                    {{ form.condition.label }} *
+                                </label>
+                                {{ form.condition|addclass:"form-control" }}
+                                {% if form.condition.help_text %}
+                                    <div class="form-text">{{ form.condition.help_text }}</div>
+                                {% endif %}
+                                {% if form.condition.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.condition.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Descripción -->
+                            <div class="mb-4">
+                                <label for="{{ form.description.id_for_label }}" class="form-label">
+                                    {{ form.description.label }}
+                                </label>
+                                {{ form.description|addclass:"form-control" }}
+                                {% if form.description.help_text %}
+                                    <div class="form-text">{{ form.description.help_text }}</div>
+                                {% endif %}
+                                {% if form.description.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.description.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Precio -->
+                            <div class="mb-4">
+                                <label for="{{ form.price.id_for_label }}" class="form-label">
+                                    {{ form.price.label }}
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    {{ form.price|addclass:"form-control" }}
+                                </div>
+                                {% if form.price.help_text %}
+                                    <div class="form-text">{{ form.price.help_text }}</div>
+                                {% endif %}
+                                {% if form.price.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.price.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Imagen -->
+                            <div class="mb-4">
+                                <label for="{{ form.image.id_for_label }}" class="form-label">
+                                    {{ form.image.label }}
+                                </label>
+                                <div class="input-file-container">
+                                    {{ form.image|addclass:"form-control" }}
+                                    <div class="input-file-placeholder">
+                                        <i class="fas fa-cloud-upload-alt me-2"></i>Selecciona una imagen
+                                    </div>
+                                </div>
+                                {% if form.image.help_text %}
+                                    <div class="form-text">{{ form.image.help_text }}</div>
+                                {% endif %}
+                                {% if form.image.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.image.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="d-flex gap-3 mt-5">
+                                <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                                    <i class="fas fa-check me-2"></i>Publicar Producto
+                                </button>
+                                <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-times me-2"></i>Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .form-card {
+        border-radius: var(--border-radius);
+        border: none;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--primary-color), #1565C0);
+        color: white;
+        padding: 2rem 1.5rem;
+        border: none;
+    }
+    
+    .dynamic-field {
+        display: none;
+    }
+    
+    .input-file-container {
+        position: relative;
+    }
+    
+    .input-file-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        background-color: white;
+        border: 1px solid #dee2e6;
+        border-radius: var(--input-radius);
+        pointer-events: none;
+        color: #6c757d;
+    }
+    
+    input[type="file"] {
+        opacity: 0;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 46px;
+        cursor: pointer;
+    }
+    
+    input[type="file"]:focus + .input-file-placeholder {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(13,110,253,0.15);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoryField = document.getElementById('id_category');
+        const foodTypeField = document.getElementById('food-type-field');
+        const conditionField = document.getElementById('condition-field');
+        const fileInput = document.querySelector('input[type="file"]');
+        const placeholder = document.querySelector('.input-file-placeholder');
+        
+        // Manejar cambios de categoría
+        function handleCategoryChange() {
+            const selectedCategory = categoryField.value;
+            
+            if (selectedCategory === 'Comida') {
+                foodTypeField.style.display = 'block';
+                conditionField.style.display = 'none';
+            } else {
+                foodTypeField.style.display = 'none';
+                conditionField.style.display = 'block';
+            }
+        }
+        
+        // Manejar visualización del nombre del archivo
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                placeholder.innerHTML = `<i class="fas fa-check me-2 text-success"></i>${this.files[0].name}`;
+            } else {
+                placeholder.innerHTML = `<i class="fas fa-cloud-upload-alt me-2"></i>Selecciona una imagen`;
+            }
+        });
+        
+        // Iniciar con el estado correcto
+        handleCategoryChange();
+        
+        // Escuchar cambios en la categoría
+        categoryField.addEventListener('change', handleCategoryChange);
+    });
+</script>
+{% endblock %} 

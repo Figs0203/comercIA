@@ -1,0 +1,88 @@
+<div class="schedule-formset">
+    <h3 class="mb-4">
+        <i class="fas fa-clock me-2"></i>Horario de Atención
+    </h3>
+    {{ schedule_formset.management_form }}
+    
+    <div class="schedule-grid">
+        {% for form in schedule_formset %}
+            <div class="schedule-item card mb-3">
+                {{ form.day }}
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">{{ form.day.value }}</h5>
+                        <div class="form-check form-switch">
+                            {{ form.is_available }}
+                            <label class="form-check-label" for="{{ form.is_available.id_for_label }}">
+                                Disponible
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="time-inputs" data-available="{{ form.is_available.value|yesno:'true,false' }}">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label">Hora inicio</label>
+                                {{ form.start_time }}
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Hora cierre</label>
+                                {{ form.end_time }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.schedule-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.schedule-item {
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.time-inputs[data-available="false"] {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.form-switch {
+    padding-left: 2.5em;
+}
+
+.form-switch .form-check-input {
+    width: 3em;
+    height: 1.5em;
+    margin-left: -2.5em;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const scheduleItems = document.querySelectorAll('.schedule-item');
+    
+    scheduleItems.forEach(item => {
+        const toggle = item.querySelector('.availability-toggle');
+        const timeInputs = item.querySelector('.time-inputs');
+        
+        toggle.addEventListener('change', function() {
+            timeInputs.dataset.available = this.checked;
+            const inputs = timeInputs.querySelectorAll('input[type="time"]');
+            inputs.forEach(input => {
+                input.required = this.checked;
+                if (!this.checked) {
+                    input.value = '';
+                }
+            });
+        });
+    });
+});
+</script> 
