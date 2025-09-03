@@ -1,0 +1,197 @@
+{% extends 'products/base.html' %}
+{% load form_tags %}
+
+{% block extra_styles %}
+<style>
+    .profile-section {
+        background-color: var(--light-bg);
+    }
+    
+    .profile-card {
+        background: white;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+    }
+    
+    .profile-header {
+        background: linear-gradient(135deg, var(--primary-color), #1565C0);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+    }
+    
+    .profile-image-wrapper {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 1.5rem;
+        position: relative;
+    }
+    
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid rgba(255,255,255,0.2);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .store-name {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .store-slogan {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 1.5rem;
+    }
+    
+    .profile-body {
+        padding: 2.5rem;
+    }
+    
+    .info-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .info-card-header {
+        background-color: rgba(0,0,0,0.02);
+        padding: 1.25rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .info-card-body {
+        padding: 1.5rem;
+    }
+    
+    .form-section {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .whatsapp-button {
+        background-color: #25D366;
+        color: white;
+        box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+        font-weight: 500;
+        padding: 0.6rem 1.5rem;
+        border-radius: var(--button-radius);
+        transition: all 0.3s;
+        border: none;
+    }
+    
+    .whatsapp-button:hover {
+        background-color: #128C7E;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
+    }
+    
+    .schedule-table {
+        width: 100%;
+        background-color: white;
+    }
+    
+    .schedule-table thead th {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        border: none;
+    }
+    
+    .schedule-table td {
+        padding: 1rem 1.5rem;
+        vertical-align: middle;
+        border-color: rgba(0,0,0,0.05);
+    }
+    
+    .schedule-table tbody tr:nth-child(even) {
+        background-color: rgba(0,0,0,0.02);
+    }
+    
+    @media (max-width: 768px) {
+        .profile-header {
+            padding: 2rem 1rem;
+        }
+        
+        .store-name {
+            font-size: 2rem;
+        }
+        
+        .profile-body {
+            padding: 1.5rem;
+        }
+        
+        .whatsapp-button {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 100;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .whatsapp-button i {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        
+        .whatsapp-button span {
+            display: none;
+        }
+    }
+    
+    /* Estilos para formularios dentro de perfiles */
+    .input-file-container {
+        position: relative;
+    }
+    
+    .input-file-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        background-color: white;
+        border: 1px solid #dee2e6;
+        border-radius: var(--input-radius);
+        pointer-events: none;
+        color: #6c757d;
+    }
+    
+    input[type="file"] {
+        opacity: 0;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 46px;
+        cursor: pointer;
+    }
+    
+    input[type="file"]:focus + .input-file-placeholder {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(13,110,253,0.15);
+    }
+</style>
+{% endblock %} 

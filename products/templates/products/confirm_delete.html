@@ -1,0 +1,179 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+
+{% block title %}Eliminar Producto - EAFIT Trade{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="delete-card">
+                    <div class="delete-header">
+                        <div class="warning-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h2 class="delete-title">¿Eliminar Producto?</h2>
+                        <p class="delete-warning">Esta acción no se puede deshacer</p>
+                    </div>
+                    
+                    <div class="product-info">
+                        <div class="product-image-container">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                            {% else %}
+                                <div class="no-image">
+                                    <i class="fas fa-image"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="product-details">
+                            <h3 class="product-title">{{ product.name }}</h3>
+                            <div class="product-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-tag"></i>
+                                    <span>{{ product.get_category_display }}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    <span>$ {{ product.price|floatformat:0|intcomma }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="post" class="delete-actions">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            <i class="fas fa-trash-alt me-2"></i>Sí, Eliminar Producto
+                        </button>
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .delete-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        padding: 2rem;
+    }
+    
+    .delete-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .warning-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #fde8e8;
+        color: #dc3545;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+    }
+    
+    .delete-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0.75rem;
+    }
+    
+    .delete-warning {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+    
+    .product-info {
+        display: flex;
+        gap: 1.5rem;
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 2rem;
+    }
+    
+    .product-image-container {
+        width: 120px;
+        height: 120px;
+        flex-shrink: 0;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+    
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .no-image {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #e9ecef;
+        color: #adb5bd;
+        font-size: 2rem;
+    }
+    
+    .product-details {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .product-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #2c3e50;
+    }
+    
+    .product-meta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+    
+    .delete-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    @media (min-width: 576px) {
+        .delete-actions {
+            flex-direction: row;
+            gap: 1.5rem;
+        }
+        
+        .delete-actions .btn {
+            flex: 1;
+        }
+    }
+</style>
+{% endblock %} 

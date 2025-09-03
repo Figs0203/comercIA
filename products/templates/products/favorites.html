@@ -1,0 +1,398 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+
+{% block title %}Mis Favoritos - EAFIT Trade{% endblock %}
+
+{% block extra_styles %}
+<style>
+    /* Estilos para la sección favoritos */
+    body {
+        background-color: #f8f9fa;
+    }
+    
+    .favorites-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+    
+    .favorites-header {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .favorites-header h1 {
+        color: #0f4c81;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .favorites-header p {
+        color: #6c757d;
+        font-size: 1rem;
+    }
+    
+    /* Estilo de tarjetas de productos */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .product-card {
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        cursor: pointer;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .product-img-container {
+        position: relative;
+        width: 100%;
+        padding-top: 75%; /* 4:3 aspect ratio */
+        overflow: hidden;
+    }
+    
+    .product-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .category-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        color: #495057;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 30px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        z-index: 1;
+    }
+    
+    .product-body {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+    
+    .product-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #212529;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.3;
+    }
+    
+    .price-container {
+        margin-top: auto;
+        padding-top: 0.5rem;
+    }
+    
+    .product-price {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #212529;
+        display: flex;
+        align-items: center;
+    }
+    
+    .availability-badge {
+        margin-left: 0.5rem;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    .availability-badge i {
+        margin-right: 0.25rem;
+    }
+    
+    .favorite-btn {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: white;
+        color: #dc3545;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        z-index: 1;
+        cursor: pointer;
+    }
+    
+    .favorite-btn:hover {
+        background-color: #f8f9fa;
+    }
+    
+    /* Estado de producto no disponible */
+    .product-unavailable .product-img {
+        filter: grayscale(0.7);
+    }
+    
+    .product-unavailable .product-body {
+        opacity: 0.8;
+    }
+    
+    /* Estilos para el estado vacío */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin: 3rem auto;
+        max-width: 500px;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        color: #dee2e6;
+        margin-bottom: 1.5rem;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.5rem;
+        color: #343a40;
+        margin-bottom: 1rem;
+    }
+    
+    .empty-state p {
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+        
+        .product-title {
+            font-size: 0.85rem;
+        }
+        
+        .product-price {
+            font-size: 1rem;
+        }
+        
+        .favorites-header h1 {
+            font-size: 2rem;
+        }
+        
+        .favorites-header p {
+            font-size: 0.9rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .product-body {
+            padding: 0.75rem;
+        }
+        
+        .product-title {
+            font-size: 0.8rem;
+            -webkit-line-clamp: 1;
+        }
+        
+        .product-price {
+            font-size: 0.9rem;
+        }
+        
+        .favorite-btn {
+            width: 28px;
+            height: 28px;
+        }
+        
+        .favorite-btn i {
+            font-size: 0.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="favorites-container">
+    {% csrf_token %}
+    <div class="favorites-header">
+        <h1>Mis Favoritos</h1>
+        <p>Aquí encontrarás todos los productos que has marcado como favoritos</p>
+    </div>
+
+    <div id="favorites-content">
+        {% if favorites %}
+        <div class="products-grid">
+            {% for favorite in favorites %}
+            <div class="product-card {% if not favorite.product.available %}product-unavailable{% endif %}" id="favorite-{{ favorite.product.id }}">
+                <button 
+                    onclick="toggleFavorite(event, '{{ favorite.product.id }}')"
+                    class="favorite-btn" 
+                    title="Eliminar de favoritos"
+                >
+                    <i class="fas fa-heart"></i>
+                </button>
+                
+                <div class="product-img-container">
+                    {% if favorite.product.image %}
+                    <img src="{{ favorite.product.image.url }}" class="product-img" alt="{{ favorite.product.name }}">
+                    {% else %}
+                    <div class="product-img default-img"></div>
+                    {% endif %}
+                    <span class="category-badge">{{ favorite.product.get_category_display }}</span>
+                </div>
+                
+                <div class="product-body">
+                    <a href="{% url 'product_detail' favorite.product.id %}" class="text-decoration-none">
+                        <h3 class="product-title">{{ favorite.product.name }}</h3>
+                    </a>
+                    
+                    <div class="price-container">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span class="product-price">$ {{ favorite.product.price|floatformat:0|intcomma }}</span>
+                            {% if favorite.product.available %}
+                            <span class="availability-badge text-success">
+                                <i class="fas fa-check-circle"></i>Disponible
+                            </span>
+                            {% else %}
+                            <span class="availability-badge text-danger">
+                                <i class="fas fa-times-circle"></i>No disponible
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="far fa-heart"></i>
+            <h3>No tienes favoritos</h3>
+            <p>Encuentra productos que te gusten y agrégalos a tus favoritos</p>
+            <a href="{% url 'home' %}" class="btn btn-primary">
+                <i class="fas fa-search me-2"></i>Explorar productos
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script>
+function toggleFavorite(event, productId) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    // Convertir a número si viene como cadena
+    productId = parseInt(productId);
+    
+    const productCard = document.getElementById(`favorite-${productId}`);
+    
+    // Añadir animación de salida
+    productCard.style.transition = 'all 0.3s ease';
+    productCard.style.transform = 'scale(0.8)';
+    productCard.style.opacity = '0';
+    
+    fetch(`/favorite/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        mode: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'removed') {
+            setTimeout(() => {
+                productCard.remove();
+                
+                const remainingFavorites = document.querySelectorAll('[id^="favorite-"]');
+                if (remainingFavorites.length === 0) {
+                    const favoritesContent = document.getElementById('favorites-content');
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'empty-state';
+                    emptyState.style.opacity = '0';
+                    emptyState.style.transform = 'translateY(20px)';
+                    emptyState.innerHTML = `
+                        <i class="far fa-heart"></i>
+                        <h3>No tienes favoritos</h3>
+                        <p>Encuentra productos que te gusten y agrégalos a tus favoritos</p>
+                        <a href="{% url 'home' %}" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Explorar productos
+                        </a>
+                    `;
+                    
+                    favoritesContent.innerHTML = '';
+                    favoritesContent.appendChild(emptyState);
+                    requestAnimationFrame(() => {
+                        emptyState.style.transition = 'all 0.5s ease';
+                        emptyState.style.opacity = '1';
+                        emptyState.style.transform = 'translateY(0)';
+                    });
+                }
+            }, 300);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        productCard.style.transform = '';
+        productCard.style.opacity = '';
+    });
+}
+
+// Hacer que las tarjetas sean clickeables (excepto los botones)
+document.addEventListener('DOMContentLoaded', function() {
+    const productCards = document.querySelectorAll('.product-card');
+    
+    productCards.forEach(card => {
+        card.addEventListener('click', function(event) {
+            // Si el clic no fue en un botón o un enlace
+            if (!event.target.closest('button') && !event.target.closest('a')) {
+                // Obtener el enlace del detalle del producto de esta tarjeta
+                const detailLink = this.querySelector('a').getAttribute('href');
+                window.location.href = detailLink;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

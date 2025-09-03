@@ -1,0 +1,918 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+{% load form_tags %}
+
+{% block title %}{{ product.name }} - EAFIT Trade{% endblock %}
+
+{% block extra_styles %}
+{{ block.super }}
+<style>
+    .product-section {
+        padding: 3rem 0;
+        background-color: #f8f9fa;
+        min-height: calc(100vh - 56px);
+    }
+    
+    .product-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 0 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+    
+    .product-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+    }
+    
+    .product-info {
+        padding: 2rem;
+    }
+    
+    .product-category {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 1rem;
+        background-color: #f0f2f5;
+        color: #495057;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+
+    .product-title {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+        color: #212529;
+    }
+
+    .product-price {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .availability-badge {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .badge-available {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .badge-unavailable {
+        background-color: #ffebee;
+        color: #c62828;
+    }
+
+    .product-rating {
+        margin: 1rem 0;
+        color: #6c757d;
+    }
+
+    .rating-value {
+        font-weight: 600;
+        color: #ffc107;
+    }
+
+    .product-description {
+        margin: 1.5rem 0;
+        color: #495057;
+        line-height: 1.6;
+    }
+    
+    .seller-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .seller-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .seller-details {
+        flex: 1;
+    }
+
+    .seller-name {
+        font-weight: 500;
+        color: var(--primary-color);
+        text-decoration: none;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+
+    .seller-slogan {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin: 0;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    
+    .btn-action {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+    }
+    
+    .comments-section {
+        margin-top: 3rem;
+    }
+
+    .comment-form {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .comment-list {
+        margin-top: 2rem;
+    }
+
+    .comment-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .comment-author {
+        font-weight: 500;
+        color: #495057;
+    }
+    
+    .comment-date {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .comment-rating {
+        color: #ffc107;
+        margin-bottom: 0.5rem;
+    }
+
+    .comment-text {
+        color: #495057;
+        line-height: 1.5;
+    }
+
+    .rating-stars {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .star-rating {
+        display: inline-block;
+        font-size: 1.5rem;
+        color: #ffc107;
+        cursor: pointer;
+    }
+
+    .star-rating:hover,
+    .star-rating:hover ~ .star-rating {
+        color: #ffdb4d;
+    }
+    
+    .comment-form textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .comment-form textarea:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        outline: none;
+    }
+
+    .product-image {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .product-image:hover {
+        transform: scale(1.02);
+    }
+
+    .image-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        z-index: 1050;
+        backdrop-filter: blur(5px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .image-modal.show {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+    }
+
+    .modal-image {
+        max-width: 90%;
+        max-height: 90vh;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+    }
+
+    .image-modal.show .modal-image {
+        transform: scale(1);
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .modal-close:hover {
+        opacity: 1;
+    }
+    
+    @media (max-width: 767.98px) {
+        .product-image {
+            height: 300px;
+        }
+        
+        .product-info {
+            padding: 1.5rem;
+    }
+    
+        .action-buttons {
+            flex-direction: column;
+    }
+    
+        .btn-action {
+            width: 100%;
+    }
+    }
+    
+    .seller-link-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.2s;
+    }
+
+    .seller-link-wrapper:hover {
+        transform: translateY(-2px);
+    }
+
+    .seller-info {
+        cursor: pointer;
+    }
+
+    /* Estilos para la sección de comentarios */
+    .comments-section {
+        background-color: #fff;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .comment-form-card {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+    }
+
+    .star-rating {
+        display: inline-flex;
+        gap: 0.5rem;
+        font-size: 1.5rem;
+    }
+
+    .rating-star {
+        cursor: pointer;
+        color: #dee2e6;
+        transition: color 0.2s;
+    }
+
+    .rating-star.active {
+        color: #ffc107;
+    }
+
+    .rating-star:hover {
+        color: #ffc107;
+    }
+
+    .comment-card {
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .rating-display {
+        font-size: 0.875rem;
+        margin: 0.25rem 0;
+    }
+
+    .comment-text {
+        margin-top: 0.5rem;
+        color: #495057;
+    }
+
+    /* Mejor adaptación para móvil */
+    @media (max-width: 767px) {
+        .comments-section {
+            padding: 1.25rem;
+            margin-top: 2rem;
+        }
+        
+        .comment-form-card {
+            padding: 1.25rem;
+        }
+        
+        .star {
+            font-size: 1.5rem;
+            padding: 0.25rem;
+        }
+        
+        .star-rating-container {
+            margin-bottom: 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .star-rating-label {
+            margin-bottom: 0.5rem;
+            margin-right: 0;
+        }
+        
+        .comment-card {
+            padding: 1rem;
+        }
+        
+        .comment-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .comment-header small {
+            margin-top: 0.25rem;
+        }
+        
+        .comment-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        textarea.form-control {
+            min-height: 80px;
+            padding: 0.75rem;
+        }
+        
+        .btn {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+    }
+
+    .btn-success {
+        background-color: #25D366;
+        border-color: #25D366;
+    }
+    
+    .btn-success:hover {
+        background-color: #128C7E;
+        border-color: #128C7E;
+    }
+    
+    @media (max-width: 767.98px) {
+        .action-buttons {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .btn-action {
+            width: 100%;
+        }
+    }
+
+    .whatsapp-button {
+        background-color: #25D366 !important;
+        border-color: #25D366 !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .whatsapp-button:hover {
+        background-color: #128C7E !important;
+        border-color: #128C7E !important;
+        transform: translateY(-2px);
+    }
+
+    /* Estilos para el sistema de calificación por estrellas */
+    .star-rating-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .star-rating-label {
+        margin-right: 1rem;
+        font-weight: 500;
+    }
+
+    .stars {
+        display: flex;
+    }
+
+    .star {
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 0.2rem;
+        color: #ffc107; /* Color amarillo para estrellas */
+    }
+
+    .star i.far {
+        color: #e0e0e0; /* Color gris claro para estrellas vacías */
+    }
+
+    .star i.fas {
+        color: #ffc107; /* Color amarillo para estrellas llenas */
+    }
+
+    .star.selected i.fas {
+        color: #ffc107; /* Asegurarse que las estrellas seleccionadas estén amarillas */
+    }
+
+    /* Mejor adaptación para móvil */
+    @media (max-width: 767px) {
+        .star {
+            font-size: 1.3rem;
+            padding: 0.15rem;
+        }
+        
+        .star-rating-container {
+            margin-bottom: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="product-section">
+    <div class="container">
+        <div class="product-card">
+            <div class="row g-0">
+                <!-- Columna de imagen -->
+                <div class="col-md-6">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" 
+                             alt="{{ product.name }}" 
+                             class="product-image"
+                             onclick="openImageModal('{{ product.image.url }}')">
+                    {% endif %}
+                </div>
+                
+                <!-- Columna de información -->
+                <div class="col-md-6">
+                    <div class="product-info">
+                        <!-- Categorías -->
+                        <div class="product-category">
+                            {{ product.get_category_display }}
+                            {% if product.food_type %}
+                                • {{ product.get_food_type_display }}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Título y precio -->
+                        <h1 class="product-title">{{ product.name }}</h1>
+                        <div class="product-price">$ {{ product.price|floatformat:0|intcomma }}</div>
+                        
+                        <!-- Estado -->
+                        <span class="availability-badge {% if product.available %}badge-available{% else %}badge-unavailable{% endif %}">
+                            {% if product.available %}Disponible{% else %}No disponible{% endif %}
+                        </span>
+                        
+                        <!-- Calificación -->
+                        {% if product.total_ratings > 0 %}
+                            <div class="product-rating">
+                                <span class="rating-value">{{ product.average_rating }}</span>/5
+                                <span class="ms-2">({{ product.total_ratings }} reseñas)</span>
+                            </div>
+                            {% endif %}
+                        
+                        <!-- Descripción -->
+                        <div class="product-description">
+                            {{ product.description|linebreaks }}
+                        </div>
+                        
+                        <!-- Información del vendedor -->
+                        <div class="seller-info">
+                            <a href="{% url 'public_profile' product.seller.id %}" class="seller-link-wrapper">
+                                        {% if seller_profile.profile_image %}
+                                            <img src="{{ seller_profile.profile_image.url }}" 
+                                                 alt="{{ seller_profile.store_name }}"
+                                         class="seller-image">
+                                        {% else %}
+                                    <div class="seller-image d-flex align-items-center justify-content-center bg-secondary">
+                                        <i class="fas fa-store text-white"></i>
+                                            </div>
+                                        {% endif %}
+                                <div class="seller-details">
+                                    <span class="seller-name">
+                                        {{ seller_profile.store_name|default:product.seller.username }}
+                                    </span>
+                                            {% if seller_profile.slogan %}
+                                        <p class="seller-slogan">{{ seller_profile.slogan }}</p>
+                                            {% endif %}
+                                    </div>
+                                </a>
+                        </div>
+                        
+                        <!-- Botones de acción -->
+                        <div class="action-buttons">
+                            {% if user == product.seller %}
+                                <a href="{% url 'edit_product' product.id %}" class="btn btn-primary btn-action">
+                                    <i class="fas fa-edit me-2"></i>Editar producto
+                                </a>
+                                <a href="{% url 'delete_product' product.id %}" class="btn btn-outline-danger btn-action">
+                                    <i class="fas fa-trash me-2"></i>Eliminar producto
+                                </a>
+                                    {% else %}
+                            {% if user.is_authenticated %}
+                                    <button onclick="toggleFavorite(event, {{ product.id }})" 
+                                            class="btn {% if is_favorite %}btn-danger{% else %}btn-outline-danger{% endif %} btn-action">
+                                        <i class="fas fa-heart me-2"></i>
+                                        {% if is_favorite %}Quitar de favoritos{% else %}Agregar a favoritos{% endif %}
+                                </button>
+                            {% endif %}
+                                {% if whatsapp_link %}
+                                    <a href="{{ whatsapp_link }}" 
+                                       class="btn btn-success btn-action whatsapp-button"
+                                       onclick="registerWhatsappClick({{ seller_profile.id }})"
+                                       target="_blank"
+                                       rel="noopener noreferrer">
+                                        <i class="fab fa-whatsapp me-2"></i>Contactar por WhatsApp
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección de comentarios -->
+        <div class="comments-section mt-5">
+            <h3 class="mb-4">
+                <i class="fas fa-comments me-2"></i>Comentarios y Calificaciones
+            </h3>
+            
+            {% if user.is_authenticated %}
+                <div class="comment-form-card mb-4">
+                    <form method="post" action="{% url 'add_comment' product.id %}" class="comment-form">
+                    {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <div class="star-rating-container">
+                                <label class="star-rating-label">Calificación:</label>
+                                <div class="stars">
+                                    <span class="star" data-rating="1"><i class="far fa-star"></i></span>
+                                    <span class="star" data-rating="2"><i class="far fa-star"></i></span>
+                                    <span class="star" data-rating="3"><i class="far fa-star"></i></span>
+                                    <span class="star" data-rating="4"><i class="far fa-star"></i></span>
+                                    <span class="star" data-rating="5"><i class="far fa-star"></i></span>
+                                </div>
+                                <input type="hidden" name="rating" id="id_rating" value="0" required>
+                            </div>
+                            <div class="invalid-feedback d-none" id="rating-error">
+                                Por favor, selecciona una calificación.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <textarea name="text" class="form-control" rows="3" placeholder="Escribe tu comentario aquí..." required></textarea>
+                    </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane me-2"></i>Publicar Comentario
+                    </button>
+                </form>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <a href="{% url 'login' %}" class="alert-link">Inicia sesión</a> para dejar un comentario.
+                </div>
+            {% endif %}
+            
+            <div class="comments-list">
+            {% for comment in comments %}
+                    <div class="comment-card mb-3">
+                        <div class="comment-header d-flex justify-content-between align-items-start">
+                        <div>
+                                <h6 class="mb-0">{{ comment.user.username }}</h6>
+                                <div class="rating-display">
+                                    {% for i in "12345" %}
+                                        <i class="fas fa-star {% if i|add:'0' <= comment.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                                {% endfor %}
+                            </div>
+                        </div>
+                            <small class="text-muted">{{ comment.created_at|date:"d M Y" }}</small>
+                    </div>
+                        <p class="comment-text mb-1">{{ comment.text }}</p>
+                    {% if user == comment.user %}
+                            <form action="{% url 'delete_comment' comment.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                                <button type="submit" class="btn btn-link text-danger p-0">
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="text-muted text-center">No hay comentarios aún. ¡Sé el primero en comentar!</p>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal para la imagen -->
+<div class="image-modal" id="imageModal" onclick="closeImageModal(event)">
+    <span class="modal-close" onclick="closeImageModal(event)">&times;</span>
+    <img src="" alt="Imagen ampliada" class="modal-image" onclick="event.stopPropagation()">
+</div>
+
+<!-- Clicks en whatsapp boton -->
+<script>
+    function getCSRFToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]').value;
+    }
+
+    function registerWhatsappClick(profileId) {
+        fetch("{% url 'register_whatsapp_click' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": getCSRFToken(),
+            },
+            body: new URLSearchParams({
+                profile_id: profileId
+            })
+        }).then(response => response.json())
+          .then(data => {
+              if (!data.success) {
+                  console.error("Error registrando clic:", data.error);
+              }
+          });
+    }
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Sistema de calificación por estrellas
+    const stars = document.querySelectorAll('.star-rating i');
+    const ratingInput = document.getElementById('selected-rating');
+    
+    stars.forEach(star => {
+        star.addEventListener('mouseover', function() {
+            const rating = parseInt(this.dataset.rating);
+            
+            // Resaltar estrellas hasta la que está actualmente bajo el cursor
+            stars.forEach((s, index) => {
+                s.classList.remove('far');
+                s.classList.remove('fas');
+                
+                if (index < rating) {
+                    s.classList.add('fas');
+                } else {
+                    s.classList.add('far');
+                }
+            });
+        });
+        
+        star.addEventListener('mouseout', function() {
+            const currentRating = parseInt(ratingInput.value);
+            
+            // Restablecer estrellas según el valor actual
+            stars.forEach((s, index) => {
+                s.classList.remove('far');
+                s.classList.remove('fas');
+                
+                if (index < currentRating) {
+                    s.classList.add('fas');
+                } else {
+                    s.classList.add('far');
+                }
+            });
+        });
+        
+        star.addEventListener('click', function() {
+            const rating = parseInt(this.dataset.rating);
+            ratingInput.value = rating;
+            
+            // Actualizar estrellas
+            stars.forEach((s, index) => {
+                s.classList.remove('far');
+                s.classList.remove('fas');
+                
+                if (index < rating) {
+                    s.classList.add('fas');
+                } else {
+                    s.classList.add('far');
+                }
+            });
+        });
+    });
+    
+    // Botón de favorito
+    const favoriteBtn = document.getElementById('favoriteBtn');
+    if (favoriteBtn) {
+        favoriteBtn.addEventListener('click', function() {
+            const productId = this.dataset.productId;
+            
+            // Enviar solicitud para alternar el estado de favorito
+            fetch(`/favorite/toggle/${productId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+                    'Content-Type': 'application/json'
+                },
+                mode: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Actualizar la interfaz
+                if (data.status === 'added') {
+                    this.classList.add('active');
+                    this.innerHTML = '<i class="fas fa-heart me-2"></i><span>En favoritos</span>';
+                } else {
+                    this.classList.remove('active');
+                    this.innerHTML = '<i class="far fa-heart me-2"></i><span>Agregar a favoritos</span>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    }
+});
+
+// Modal de imagen
+function openImageModal(imageUrl) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = modal.querySelector('.modal-image');
+    modalImage.src = imageUrl;
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeImageModal(event) {
+    if (event) {
+        event.preventDefault();
+    }
+    const modal = document.getElementById('imageModal');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+// Cerrar modal con la tecla Escape
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeImageModal();
+    }
+});
+
+// Función existente de favoritos
+function toggleFavorite(event, productId) {
+    event.preventDefault();
+    fetch(`/favorite/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const button = event.target;
+        if (data.status === 'added') {
+            button.classList.remove('btn-outline-danger');
+            button.classList.add('btn-danger');
+            button.textContent = 'Quitar de favoritos';
+        } else {
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-outline-danger');
+            button.textContent = 'Agregar a favoritos';
+        }
+    });
+}
+
+// Star Rating System
+document.addEventListener('DOMContentLoaded', function() {
+    const ratingContainer = document.querySelector('.star-rating-container');
+    
+    if (ratingContainer) {
+        const stars = ratingContainer.querySelectorAll('.star');
+        const ratingInput = document.getElementById('id_rating');
+        
+        // Función para actualizar la visualización de estrellas
+        function updateStars(rating) {
+            stars.forEach((star, index) => {
+                // +1 porque index empieza en 0 pero las calificaciones en 1
+                if (index < rating) {
+                    star.classList.add('selected');
+                    star.querySelector('i').classList.remove('far');
+                    star.querySelector('i').classList.add('fas');
+                } else {
+                    star.classList.remove('selected');
+                    star.querySelector('i').classList.remove('fas');
+                    star.querySelector('i').classList.add('far');
+                }
+            });
+        }
+        
+        // Establecer calificación inicial si existe
+        if (ratingInput.value) {
+            updateStars(parseInt(ratingInput.value));
+        }
+        
+        // Manejar clic en estrellas
+        stars.forEach((star, index) => {
+            star.addEventListener('click', function() {
+                const rating = index + 1;
+                ratingInput.value = rating;
+                updateStars(rating);
+            });
+            
+            // Efecto hover
+            star.addEventListener('mouseenter', function() {
+                // Vista previa al pasar el mouse
+                stars.forEach((s, i) => {
+                    if (i <= index) {
+                        s.querySelector('i').classList.remove('far');
+                        s.querySelector('i').classList.add('fas');
+                    } else {
+                        s.querySelector('i').classList.remove('fas');
+                        s.querySelector('i').classList.add('far');
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseleave', function() {
+                // Restaurar estado actual al quitar el mouse
+                updateStars(parseInt(ratingInput.value || 0));
+            });
+        });
+    }
+});
+</script>
+{% endblock %} 

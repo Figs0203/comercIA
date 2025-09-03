@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: eafittrade
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn eafit_trade.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+    healthCheckPath: /
+    autoDeploy: true 

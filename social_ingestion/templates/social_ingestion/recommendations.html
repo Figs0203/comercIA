@@ -1,0 +1,104 @@
+{% extends is_embed|yesno:',products/base.html' %}
+
+{% block title %}ComercIA - Recomendaciones{% endblock %}
+
+{% block content %}
+<div class="container{% if not is_embed %} py-4{% endif %}">
+    <h1 class="h3 mb-3">Recomendaciones detectadas</h1>
+
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-sm-4">
+            <select name="category" class="form-select">
+                <option value="">Todas las categorías</option>
+                {% for cat in categories %}
+                <option value="{{ cat }}" {% if category == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-sm-6">
+            <input type="text" name="q" class="form-control" placeholder="Buscar por texto o autor" value="{{ query }}">
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-primary w-100" type="submit"><i class="fas fa-search me-1"></i>Filtrar</button>
+        </div>
+    </form>
+
+    {% if detected_categories %}
+    <div class="mb-3">
+        <span class="me-2">Categorías detectadas:</span>
+        {% for cat in detected_categories %}
+            <span class="badge bg-primary me-1">{{ cat }}</span>
+        {% endfor %}
+    </div>
+
+    <h2 class="h5 mt-3">Productos recomendados</h2>
+    <div class="row g-3 mb-4">
+        {% for p in products %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <a href="{% url 'product_detail' p.id %}" class="text-decoration-none">
+                <div class="card h-100">
+                    {% if p.image %}
+                    <img src="{{ p.image.url }}" class="card-img-top" alt="{{ p.name }}" style="height:160px;object-fit:cover;">
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="small text-muted">{{ p.get_category_display }}</div>
+                        <div class="fw-semibold">{{ p.name }}</div>
+                        <div class="text-primary mt-1">$ {{ p.price }}</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">No hay productos recomendados para estas categorías.</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h2 class="h5 mt-4">Publicaciones detectadas</h2>
+    {% endif %}
+
+    {% if page_obj.object_list %}
+    <div class="list-group mb-3">
+        {% for post in page_obj.object_list %}
+        <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="small text-muted">{{ post.platform|upper }} · {{ post.published_at|date:'Y-m-d H:i' }}</div>
+                    <div class="fw-semibold">@{{ post.author }}</div>
+                    <div class="mt-1">{{ post.text }}</div>
+                </div>
+                <div>
+                    {% if post.categories_list %}
+                        {% for cat in post.categories_list %}
+                            <span class="badge bg-secondary ms-1">{{ cat }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&category={{ category }}&q={{ query }}">Anterior</a></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&category={{ category }}&q={{ query }}">Siguiente</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-lightbulb fa-3x mb-3 text-secondary"></i>
+        <h5>No hay recomendaciones por el momento</h5>
+        <p class="text-muted">Vuelve más tarde para ver nuevas sugerencias.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+

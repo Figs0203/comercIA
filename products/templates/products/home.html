@@ -1,0 +1,1375 @@
+{% extends 'products/base.html' %}
+{% load humanize %}
+
+{% block title %}ComercIA - Inicio{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .product-card {
+        height: 100%;
+        transition: all 0.2s;
+        border: none;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        max-width: 280px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+    }
+    
+    .product-image {
+        height: 160px;
+        object-fit: cover;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .card-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        line-height: 1.2;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 0.25rem;
+    }
+    
+    .price {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    
+    .category-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background-color: rgba(255,255,255,0.9);
+        padding: 0.2rem 0.5rem;
+        border-radius: 16px;
+        font-size: 0.7rem;
+        color: var(--primary-color);
+    }
+    
+    .favorite-btn {
+        padding: 0;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.9);
+        border: none;
+        z-index: 2;
+    }
+    
+    .product-unavailable {
+        opacity: 0.7;
+    }
+    
+    .grayscale {
+        filter: grayscale(50%);
+    }
+    
+    .star-rating {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 0.25rem;
+        font-size: 0.8rem;
+        color: #ffc107;
+    }
+    
+    .rating-value {
+        font-weight: 600;
+    }
+    
+    .rating-count {
+        color: var(--secondary-color);
+        font-size: 0.7rem;
+    }
+    
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.25em 0.5em;
+    }
+    
+    .badge i {
+        font-size: 0.75rem;
+    }
+    
+    .seller-info {
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .product-actions {
+        gap: 0.5rem;       /* Espacio entre botones */
+    }
+    
+    .btn-outline-primary {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Ajusta el espaciado entre las tarjetas */
+    .row.g-4 {
+        --bs-gutter-x: 1.5rem;
+        --bs-gutter-y: 1.5rem;
+    }
+    
+    /* Ajustes responsivos actualizados */
+    @media (max-width: 768px) {
+        .product-card {
+            max-width: 100%;
+        }
+        
+        .product-image {
+            height: 120px;
+        }
+        
+        .card-body {
+            padding: 0.5rem;
+        }
+        
+        .card-title {
+            font-size: 0.8rem;
+            line-height: 1.2;
+            margin-bottom: 0.25rem;
+        }
+        
+        .price {
+            font-size: 0.9rem;
+        }
+        
+        .category-badge {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
+        }
+        
+        .favorite-btn {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .favorite-btn i {
+            font-size: 0.9rem;
+        }
+        
+        .star-rating {
+            font-size: 0.7rem;
+        }
+        
+        .rating-value {
+            font-size: 0.7rem;
+        }
+        
+        .rating-count {
+            font-size: 0.6rem;
+        }
+    }
+    
+    /* Ajustes para pantallas muy pequeñas */
+    @media (max-width: 576px) {
+        .product-image {
+            height: 100px;
+        }
+        
+        .card-body {
+            padding: 0.4rem;
+        }
+        
+        .card-title {
+            font-size: 0.75rem;
+        }
+        
+        .price {
+            font-size: 0.85rem;
+        }
+        
+        .category-badge {
+            font-size: 0.6rem;
+            padding: 0.1rem 0.3rem;
+        }
+        
+        .favorite-btn {
+            width: 22px;
+            height: 22px;
+        }
+        
+        .favorite-btn i {
+            font-size: 0.8rem;
+        }
+        
+        .star-rating {
+            font-size: 0.65rem;
+        }
+        
+        .rating-value {
+            font-size: 0.65rem;
+        }
+        
+        .rating-count {
+            font-size: 0.55rem;
+        }
+    }
+    
+    /* Ajustes para pantallas grandes */
+    @media (min-width: 1200px) {
+        .col-xl-3 {
+            flex: 0 0 auto;
+            width: 20%; /* 5 tarjetas por fila en pantallas grandes */
+        }
+    }
+    
+    /* Estilos para el buscador avanzado */
+    .search-section .card {
+        border: none;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .search-section .card-body {
+        padding: 1.5rem;
+    }
+    
+    .search-section .form-control,
+    .search-section .form-select {
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #dee2e6;
+    }
+    
+    .search-section .input-group-text {
+        background-color: white;
+        border-right: none;
+    }
+    
+    .search-section .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .search-section .btn-primary {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+    }
+    
+    .results-section {
+        padding: 1rem 0;
+    }
+    
+    @media (max-width: 767.98px) {
+        .search-section .btn-primary {
+            margin-top: 1rem;
+        }
+    }
+    
+    .unavailable-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+    }
+    
+    .unavailable-overlay .badge {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .product-status {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+    }
+    
+    .availability-badge {
+        font-size: 0.7rem;
+        font-weight: 500;
+    }
+    
+    .text-success {
+        color: #198754 !important;
+    }
+    
+    .text-danger {
+        color: #dc3545 !important;
+    }
+    
+    .search-filters {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .input-group-text {
+        background-color: transparent;
+        border-right: none;
+    }
+    
+    .input-group .form-control {
+        border-left: none;
+    }
+    
+    .input-group .form-control:focus {
+        border-color: #dee2e6;
+        box-shadow: none;
+    }
+    
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    
+    /* Estilos para los filtros de precio */
+    .price-range-inputs .input-group {
+        flex: 1;
+    }
+    
+    .price-range-inputs .input-group-text {
+        border: 1px solid #dee2e6;
+        border-right: none;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .price-range-inputs .form-control {
+        border-left: none;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    .price-range-inputs .form-control:focus {
+        border-color: #dee2e6;
+        box-shadow: none;
+    }
+    
+    .price-range-inputs .input-group:focus-within {
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        border-radius: 0.375rem;
+    }
+    
+    .price-range-inputs .input-group:focus-within .input-group-text,
+    .price-range-inputs .input-group:focus-within .form-control {
+        border-color: var(--primary-color);
+    }
+    
+    /* Ajustes responsivos */
+    @media (max-width: 767.98px) {
+        .price-range-inputs {
+            margin-bottom: 1rem;
+        }
+        
+        .price-range-inputs .d-flex {
+            gap: 0.5rem !important;
+        }
+    }
+    
+    /* Prevenir flechas en inputs numéricos */
+    .price-range-inputs input[type="number"]::-webkit-inner-spin-button,
+    .price-range-inputs input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    .price-range-inputs input[type="number"] {
+        -moz-appearance: textfield;
+    }
+    
+    .search-bar .input-group {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    
+    .search-bar .input-group-text,
+    .search-bar .form-control {
+        border-color: #dee2e6;
+        background: white;
+    }
+    
+    .search-bar .form-control:focus {
+        box-shadow: none;
+        border-color: var(--primary-color);
+    }
+    
+    .search-bar .input-group-text {
+        color: #6c757d;
+    }
+    
+    #filterOptions {
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-radius: 0.5rem;
+    }
+    
+    .category-selector select {
+        transition: all 0.3s ease;
+    }
+    
+    .price-range-inputs .input-group {
+        border-radius: 0.375rem;
+        overflow: hidden;
+    }
+    
+    .price-range-inputs .input-group-text {
+        border: 1px solid #dee2e6;
+        border-right: none;
+        color: #6c757d;
+    }
+    
+    /* Eliminar flechas de inputs numéricos */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    .search-section {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .search-form {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .search-bar {
+        background: white;
+        border-radius: 50px;
+        padding: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .search-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 20px;
+        color: #6c757d;
+    }
+
+    .search-input {
+        height: 45px;
+        border-radius: 50px;
+        padding-left: 50px;
+        border: none;
+        box-shadow: none !important;
+    }
+
+    .search-input:focus {
+        border: 1px solid var(--primary-color);
+    }
+
+    .filters-btn {
+        height: 45px;
+        border-radius: 50px;
+        padding: 0 20px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border-color: #dee2e6;
+        color: #333;
+    }
+
+    .filters-btn:hover {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+    }
+
+    /* Barra de búsqueda estilizada */
+    .search-container {
+        margin-bottom: 2.5rem;
+    }
+
+    .search-input-container {
+        position: relative;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+    .search-input {
+        height: 56px;
+        border-radius: 50px;
+        padding-left: 1.5rem;
+        padding-right: 4rem;
+        font-size: 1rem;
+        border: none;
+    }
+
+    .search-input:focus {
+        box-shadow: none;
+        border: 1px solid var(--primary-color);
+    }
+
+    .search-btn {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        border-radius: 50px;
+        width: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .filter-toggle-btn {
+        height: 56px;
+        border-radius: 50px;
+        font-weight: 500;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+    }
+
+    .filter-toggle-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .filter-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+
+    .filter-card-header {
+        background-color: rgba(0,0,0,0.02);
+        padding: 1.25rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        color: #4a5568;
+    }
+
+    .filter-card-body {
+        padding: 1.5rem;
+    }
+
+    .category-selection .form-select {
+        border-radius: 0.5rem;
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    #foodTypeFilter {
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    #foodTypeFilter select {
+        width: 100%;
+    }
+
+    /* Estilos para la sección de bienvenida */
+    .welcome-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .welcome-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h4v4H0V0zm8 0h4v4H8V0zm8 0h4v4h-4V0zM4 4h4v4H4V4zm8 0h4v4H8V4zm8 0h4v4h-4V4zM0 8h4v4H0V8zm8 0h4v4H8V8zm8 0h4v4h-4V8zM4 12h4v4H4v-4zm8 0h4v4h-4v-4zm8 0h4v4h-4v-4zM0 16h4v4H0v-4zm8 0h4v4H8v-4zm8 0h4v4h-4v-4z" fill="%23000" fill-opacity=".05"/></svg>');
+        opacity: 0.5;
+        z-index: 0;
+    }
+
+    .welcome-section .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    .welcome-section h1 {
+        color: var(--primary-color);
+        line-height: 1.2;
+    }
+
+    .welcome-section .lead {
+        color: #495057;
+        font-size: 1.25rem;
+    }
+
+    .welcome-actions {
+        margin-top: 2rem;
+    }
+
+    .welcome-illustration {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        height: 100%;
+    }
+
+    .welcome-illustration img {
+        max-width: 80%;
+        height: auto;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+        animation: float 6s ease-in-out infinite;
+        object-fit: contain;
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(0px) scale(1);
+        }
+        50% {
+            transform: translateY(-20px) scale(1.02);
+        }
+        100% {
+            transform: translateY(0px) scale(1);
+        }
+    }
+
+    /* Chatbot styles */
+    .chatbot-card {
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        border: none;
+    }
+    
+    .chatbot-card .card-header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 1rem 1.5rem;
+    }
+    
+    .chatbot-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    
+    .chatbot-icon {
+        font-size: 1.2rem;
+    }
+    
+    .chatbot-body {
+        padding: 1.5rem;
+    }
+    
+    .chatbot-prompt {
+        background-color: rgba(13, 110, 253, 0.05);
+        padding: 1rem;
+        border-radius: var(--border-radius);
+    }
+    
+    .chatbot-examples {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+    }
+    
+    .example-chip {
+        background-color: #e9ecef;
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .example-chip:hover {
+        background-color: #dee2e6;
+        transform: translateY(-2px);
+    }
+    
+    .chat-input-container {
+        margin-top: 1.5rem;
+    }
+    
+    .chat-input {
+        border-radius: 50px 0 0 50px;
+        border-right: none;
+        padding-left: 1.25rem;
+        height: 50px;
+    }
+    
+    .chat-send-btn {
+        border-radius: 0 50px 50px 0;
+        width: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .chat-keywords .badge {
+        padding: 0.5rem 0.75rem;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+    
+    .form-switch .form-check-input {
+        width: 2.5em;
+        height: 1.25em;
+    }
+    
+    .form-check-label {
+        cursor: pointer;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .chatbot-examples {
+            flex-direction: column;
+        }
+        
+        .example-chip {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+    }
+
+    /* Aumentar espaciado vertical entre secciones */
+    .section-spacing {
+        margin-bottom: 3rem;
+    }
+
+    /* Estilos para slogan */
+    .welcome-slogan {
+        color: #495057;
+        font-size: 1.15rem;
+        font-style: italic;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Estilo para el botón de chatbot */
+    .chatbot-btn {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: var(--button-radius);
+        font-weight: 500;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .chatbot-container {
+        margin-top: 2.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    /* Ajustes para tarjetas uniformes */
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+    }
+
+    .product-card .card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-card .product-actions {
+        margin-top: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Sección de bienvenida -->
+<section class="welcome-section py-5 section-spacing">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12">
+                <h1 class="display-4 fw-bold mb-3">¡Bienvenido a ComercIA!</h1>
+                <p class="welcome-slogan">Recomendaciones inteligentes desde redes sociales.</p>
+                <p class="lead mb-4">ComercIA conecta con APIs de redes como X y Telegram para detectar palabras clave (comida, ropa, tecnología) y recomendarte productos relevantes.</p>
+                {% if not user.is_authenticated %}
+                    <div class="welcome-actions">
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-store me-2"></i>Quiero ser vendedor
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="welcome-actions">
+                        <a href="{% url 'add_product' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus-circle me-2"></i>Publicar Producto
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sobre nosotros -->
+<section class="py-5 section-spacing">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="h4 mb-3">Sobre nosotros</h2>
+                        <p>ComercIA es un proyecto que integra redes sociales para detectar menciones con palabras clave como comida, ropa o tecnología, y recomendar ofertas relevantes a la comunidad. La idea es que si publicas en X o Telegram algo relacionado, el sistema lo detecta y lo pone frente a posibles compradores.</p>
+                        <p class="mb-0">Este módulo usa una API externa para poder ver tus gustos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-4">
+    <!-- Barra de búsqueda mejorada -->
+    <div class="search-container mb-5">
+        <form method="get" id="searchForm">
+            <div class="search-bar-wrapper">
+                <div class="row g-3 align-items-center justify-content-center">
+                    <!-- Barra de búsqueda -->
+                    <div class="col-md-8 col-lg-6">
+                        <div class="search-input-container">
+                            <input type="text" 
+                                name="search" 
+                                class="form-control search-input"
+                                placeholder="Buscar productos..."
+                                value="{{ search_query }}">
+                            <button type="submit" class="btn btn-primary search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Botón de filtros -->
+                    <div class="col-auto">
+                        <button class="btn btn-outline-primary filter-toggle-btn" 
+                                type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#filterOptions" 
+                                aria-expanded="false" 
+                                aria-controls="filterOptions">
+                            <i class="fas fa-filter me-2"></i>Filtros
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Panel de filtros (mantener el existente) -->
+                <div class="collapse mt-4" id="filterOptions">
+                    <div class="card card-body border-0 bg-light">
+                        <div class="row g-3">
+                            <!-- Categorías -->
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Categoría</label>
+                                <div class="category-selector">
+                                    <select name="category" class="form-select" id="categoryFilter">
+                                        <option value="">Todas las categorías</option>
+                                        {% for code, name in categories %}
+                                        <option value="{{ code }}" {% if selected_category == code %}selected{% endif %}>
+                                            {{ name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    
+                                    <!-- Subcategoría (tipo de comida) -->
+                                    <div id="foodTypeFilter" class="mt-2" {% if selected_category != 'Comida' %}style="display: none;"{% endif %}>
+                                        <select name="food_type" class="form-select">
+                                            <option value="">Todos los tipos</option>
+                                            {% for code, name in food_types %}
+                                            <option value="{{ code }}" {% if selected_food_type == code %}selected{% endif %}>
+                                                {{ name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Rango de precios -->
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Rango de precios</label>
+                                <div class="price-range-inputs">
+                                    <div class="d-flex gap-2">
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white">
+                                                <i class="fas fa-dollar-sign"></i>
+                                            </span>
+                                            <input type="number" 
+                                                   name="min_price" 
+                                                   class="form-control" 
+                                                   placeholder="Mínimo" 
+                                                   value="{{ min_price }}"
+                                                   min="0"
+                                                   aria-label="Precio mínimo">
+                                        </div>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white">
+                                                <i class="fas fa-dollar-sign"></i>
+                                            </span>
+                                            <input type="number" 
+                                                   name="max_price" 
+                                                   class="form-control" 
+                                                   placeholder="Máximo" 
+                                                   value="{{ max_price }}"
+                                                   min="0"
+                                                   aria-label="Precio máximo">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Chatbot de búsqueda inteligente - solo para usuarios autenticados -->
+    {% if user.is_authenticated %}
+    <div class="chatbot-container section-spacing">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card chatbot-card">
+                    <div class="card-header d-flex justify-content-center align-items-center">
+                        <div id="chatbotControls" class="w-100 text-center">
+                            <button id="openChatbotBtn" class="btn btn-primary w-100">
+                                <i class="fas fa-robot me-2"></i>Activar Búsqueda Inteligente
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body chatbot-body" id="chatbotInterface" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <i class="fas fa-robot chatbot-icon me-2"></i>
+                                <span class="chatbot-title">Búsqueda Inteligente</span>
+                            </div>
+                            <button id="closeChatbotBtn" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>Cerrar
+                            </button>
+                        </div>
+                        <div class="chatbot-prompt mb-3">
+                            <p>Busca productos usando lenguaje natural. Puedes preguntar cosas como:</p>
+                            <div class="chatbot-examples">
+                                <div class="example-chip" onclick="fillChatInput('¿Dónde puedo conseguir cuadernos ecológicos?')">
+                                    ¿Dónde puedo conseguir cuadernos ecológicos?
+                                </div>
+                                <div class="example-chip" onclick="fillChatInput('Busco comida barata y rica')">
+                                    Busco comida rápida cerca de mí
+                                </div>
+                                <div class="example-chip" onclick="fillChatInput('Necesito ropa deportiva')">
+                                    Necesito ropa deportiva
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <form id="chatForm" class="d-flex">
+                                {% csrf_token %}
+                                <input type="text" id="chatInput" class="form-control chat-input" 
+                                       placeholder="Escribe tu consulta aquí..." 
+                                       aria-label="Consulta de búsqueda">
+                                <button type="submit" class="btn btn-primary chat-send-btn">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <div id="chatLoadingIndicator" class="text-center py-3" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <p class="mt-2 mb-0">Procesando tu consulta...</p>
+                        </div>
+                        
+                        <div id="chatResults" class="mt-3" style="display: none;">
+                            <div class="chat-keywords mb-3">
+                                <p class="mb-1 fw-bold">Palabras clave identificadas:</p>
+                                <div id="keywordsList" class="d-flex flex-wrap gap-1"></div>
+                            </div>
+                            
+                            <div id="chatProductsContainer">
+                                <p class="results-count mb-3">
+                                    <span id="productsCount">0</span> productos encontrados
+                                </p>
+                                <div id="chatProductsList" class="row g-2"></div>
+                            </div>
+                            
+                            <div id="chatNoResults" class="text-center py-4" style="display: none;">
+                                <i class="fas fa-search fa-3x mb-3 text-secondary"></i>
+                                <h5>No se encontraron productos</h5>
+                                <p class="text-muted">Intenta con otra consulta o términos más generales</p>
+                            </div>
+                        </div>
+                        
+                        <div id="chatError" class="alert alert-danger mt-3" style="display: none;">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <span id="errorMessage"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recomendados para ti (si hay categorías detectadas) -->
+    {% if request.user.is_authenticated %}
+    <div class="section-spacing">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="h4 mb-0">Recomendados para ti</h2>
+            <a class="btn btn-link" href="{% url 'recommendations' %}">Ver más</a>
+        </div>
+        <iframe src="{% url 'recommendations' %}?embed=1" style="width:100%;height:420px;border:0;overflow:hidden;"></iframe>
+    </div>
+    {% endif %}
+
+    <!-- Resultados de la búsqueda -->
+    <div class="results-section mb-4 section-spacing">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h4 mb-0">
+                {% if search_query or selected_category %}
+                    Resultados de búsqueda
+                {% else %}
+                    Todos los productos
+                {% endif %}
+            </h2>
+        </div>
+    </div>
+
+    <!-- Grid de productos -->
+    <div class="row g-2">
+        {% for product in products %}
+        <div class="col-6 col-sm-6 col-lg-4 col-xl-3">
+            <a href="{% url 'product_detail' product.id %}" class="text-decoration-none">
+                <div class="card product-card {% if not product.available %}product-unavailable{% endif %}">
+                    <div class="position-relative">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" 
+                             class="card-img-top product-image {% if not product.available %}grayscale{% endif %}" 
+                             alt="{{ product.name }}">
+                        {% endif %}
+                        <span class="category-badge">{{ product.get_category_display }}</span>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title text-dark mb-0">{{ product.name }}</h5>
+                            {% if user.is_authenticated %}
+                            <button 
+                                class="favorite-btn favorite-toggle" 
+                                id="favorite-btn-{{ product.id }}"
+                                data-product-id="{{ product.id }}"
+                                title="Agregar a favoritos"
+                                type="button"
+                            >
+                                <i class="fas fa-heart {% if product.id in user_favorites %}text-danger{% else %}text-secondary{% endif %}"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <p class="price mb-0">$ {{ product.price|floatformat:0|intcomma }}</p>
+                            <span class="availability-badge {% if product.available %}text-success{% else %}text-danger{% endif %}">
+                                {% if product.available %}
+                                    <i class="fas fa-check-circle me-1"></i>Disponible
+                                {% else %}
+                                    <i class="fas fa-times-circle me-1"></i>No disponible
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        {% if product.total_ratings > 0 %}
+                        <div class="star-rating">
+                            <span class="rating-value">{{ product.average_rating }}</span>
+                            <i class="fas fa-star"></i>
+                            <span class="rating-count">({{ product.total_ratings }})</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-search fa-3x mb-3 text-secondary"></i>
+            <h3>No se encontraron productos</h3>
+            {% if search_query or selected_category %}
+                <p class="text-muted">Intenta con otros términos de búsqueda o filtros</p>
+                <a href="{% url 'home' %}" class="btn btn-outline-primary mt-3">
+                    <i class="fas fa-undo me-2"></i>Ver todos los productos
+                </a>
+            {% else %}
+                <p class="text-muted">Sé el primero en publicar un producto</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('searchForm');
+        const categorySelect = document.getElementById('categoryFilter');
+        const foodTypeFilter = document.getElementById('foodTypeFilter');
+        
+        function handleCategoryChange() {
+            if (categorySelect.value === 'Comida') {
+                foodTypeFilter.style.display = 'block';
+            } else {
+                foodTypeFilter.style.display = 'none';
+                foodTypeFilter.querySelector('select').value = '';
+            }
+        }
+        
+        // Inicializar estado
+        handleCategoryChange();
+        
+        // Event listeners
+        categorySelect.addEventListener('change', handleCategoryChange);
+        
+        // Asegurarse de que el filtro de tipo de comida esté visible si la categoría es 'Comida'
+        if (categorySelect.value === 'Comida') {
+            foodTypeFilter.style.display = 'block';
+        }
+
+        // Chatbot functionality
+        const openChatbotBtn = document.getElementById('openChatbotBtn');
+        const closeChatbotBtn = document.getElementById('closeChatbotBtn');
+        const chatbotInterface = document.getElementById('chatbotInterface');
+        const chatForm = document.getElementById('chatForm');
+        const chatInput = document.getElementById('chatInput');
+        const loadingIndicator = document.getElementById('chatLoadingIndicator');
+        const chatResults = document.getElementById('chatResults');
+        const keywordsList = document.getElementById('keywordsList');
+        const productsCount = document.getElementById('productsCount');
+        const chatProductsList = document.getElementById('chatProductsList');
+        const chatNoResults = document.getElementById('chatNoResults');
+        const chatError = document.getElementById('chatError');
+        const errorMessage = document.getElementById('errorMessage');
+        const chatbotControls = document.getElementById('chatbotControls');
+        
+        // Mostrar chatbot al hacer clic en el botón
+        openChatbotBtn.addEventListener('click', function() {
+            chatbotInterface.style.display = 'block';
+            chatbotControls.style.display = 'none';
+        });
+        
+        // Cerrar chatbot
+        closeChatbotBtn.addEventListener('click', function() {
+            chatbotInterface.style.display = 'none';
+            chatbotControls.style.display = 'block';
+            // Limpiar cualquier resultado previo
+            chatResults.style.display = 'none';
+            chatError.style.display = 'none';
+            chatInput.value = '';
+        });
+        
+        // Fill chat input with example text
+        window.fillChatInput = function(text) {
+            chatInput.value = text;
+            chatInput.focus();
+        };
+        
+        // Handle chat form submission
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const query = chatInput.value.trim();
+            if (!query) return;
+            
+            // Show loading indicator
+            loadingIndicator.style.display = 'block';
+            chatResults.style.display = 'none';
+            chatError.style.display = 'none';
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('query', query);
+            
+            // Get CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            // Make API request
+            fetch('{% url "chat_search" %}', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading indicator
+                loadingIndicator.style.display = 'none';
+                
+                if (data.success) {
+                    // Show results
+                    chatResults.style.display = 'block';
+                    
+                    // Display keywords
+                    keywordsList.innerHTML = '';
+                    const keywords = data.keywords.split(',');
+                    keywords.forEach(keyword => {
+                        if (keyword.trim()) {
+                            const keywordBadge = document.createElement('span');
+                            keywordBadge.className = 'badge bg-secondary me-1';
+                            keywordBadge.textContent = keyword.trim();
+                            keywordsList.appendChild(keywordBadge);
+                        }
+                    });
+                    
+                    // Display product count
+                    productsCount.textContent = data.count;
+                    
+                    // Display products or no results message
+                    chatProductsList.innerHTML = '';
+                    
+                    if (data.products.length > 0) {
+                        chatNoResults.style.display = 'none';
+                        
+                        // Create product cards
+                        data.products.forEach(product => {
+                            const productCol = document.createElement('div');
+                            productCol.className = 'col-6 col-sm-6 col-lg-4 col-xl-3';
+                            
+                            const productCard = `
+                                <a href="${product.detail_url}" class="text-decoration-none">
+                                    <div class="card product-card ${!product.available ? 'product-unavailable' : ''}">
+                                        <div class="position-relative">
+                                            ${product.image_url ? 
+                                                `<img src="${product.image_url}" 
+                                                 class="card-img-top product-image ${!product.available ? 'grayscale' : ''}" 
+                                                 alt="${product.name}">` : ''
+                                            }
+                                            <span class="category-badge">${product.category}</span>
+                                        </div>
+                                        
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h5 class="card-title text-dark mb-0">${product.name}</h5>
+                                            </div>
+                                            
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <p class="price mb-0">$ ${product.price.toLocaleString('es-CO')}</p>
+                                                <span class="availability-badge ${product.available ? 'text-success' : 'text-danger'}">
+                                                    ${product.available ?
+                                                        '<i class="fas fa-check-circle me-1"></i>Disponible' :
+                                                        '<i class="fas fa-times-circle me-1"></i>No disponible'
+                                                    }
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            `;
+                            
+                            productCol.innerHTML = productCard;
+                            chatProductsList.appendChild(productCol);
+                        });
+                    } else {
+                        chatNoResults.style.display = 'block';
+                    }
+                } else {
+                    // Show error message
+                    chatError.style.display = 'block';
+                    errorMessage.textContent = data.error || 'Ocurrió un error procesando tu consulta.';
+                }
+            })
+            .catch(error => {
+                // Hide loading indicator
+                loadingIndicator.style.display = 'none';
+                
+                // Show error message
+                chatError.style.display = 'block';
+                errorMessage.textContent = 'Error de conexión. Inténtalo de nuevo más tarde.';
+                console.error('Error:', error);
+            });
+        });
+    });
+
+    function toggleFavorite(event, productId) {
+        if (event) event.preventDefault();
+        fetch(`/favorite/toggle/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json'
+            },
+            mode: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            const button = document.querySelector(`#favorite-btn-${productId} i`);
+            if (data.status === 'added') {
+                button.classList.remove('text-secondary');
+                button.classList.add('text-danger');
+                button.title = 'Quitar de favoritos';
+            } else {
+                button.classList.remove('text-danger');
+                button.classList.add('text-secondary');
+                button.title = 'Agregar a favoritos';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Delegate clicks from buttons with data-product-id
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.favorite-toggle');
+        if (!btn) return;
+        const pid = btn.getAttribute('data-product-id');
+        if (pid) toggleFavorite(e, pid);
+    });
+</script>
+{% endblock %}
+{% endblock %}
