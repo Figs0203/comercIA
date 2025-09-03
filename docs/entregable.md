@@ -3,7 +3,7 @@
 ## 1. Logo equipo
 Inserte aquí su logo (recomendado: guárdelo en `media/Logo/` y referéncielo):
 
-![Logo del equipo](../media/Logo/EafitTrade_Nuevo_logo.png)
+![Logo del equipo](../media/Logo/ComercIA_logo.png)
 
 COMMUNICATE TEAM PRESENCE: cree una identidad de equipo, nombre y logo memorables.
 
