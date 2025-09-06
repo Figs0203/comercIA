@@ -9,6 +9,7 @@ import pytz
 COLOMBIA_TIMEZONE = pytz.timezone('America/Bogota')
 
 class Product(models.Model):
+    """Modelo que representa un producto en el catálogo de ComercIA"""
     CATEGORY_CHOICES = [
         ('Comida', 'Comida'),
         ('Ropa', 'Ropa'),
@@ -129,6 +130,7 @@ class Product(models.Model):
         return self.comments.count()
 
 class Comment(models.Model):
+    """Modelo que representa un comentario y calificación de un producto"""
     product = models.ForeignKey(
         Product, 
         on_delete=models.CASCADE,
@@ -171,6 +173,7 @@ class Comment(models.Model):
         super().save(*args, **kwargs)
 
 class Favorite(models.Model):
+    """Modelo que representa un producto marcado como favorito por un usuario"""
     user = models.ForeignKey(
         User, 
         on_delete=models.CASCADE,
@@ -196,6 +199,7 @@ class Favorite(models.Model):
         return f'{self.user.username} ♥ {self.product.name}'
 
 class ChatQuery(models.Model):
+    """Modelo que almacena las consultas procesadas por el chatbot de IA"""
     query = models.TextField(
         verbose_name='Consulta',
         help_text='Consulta en lenguaje natural del usuario'

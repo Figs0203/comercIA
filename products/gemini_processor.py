@@ -1,28 +1,36 @@
 import os
 import json
 import requests
+import logging
 from dotenv import load_dotenv
 from django.conf import settings
 
+logger = logging.getLogger(__name__)
+
 class GeminiProcessor:
+    """Procesador de consultas de lenguaje natural usando Google Gemini AI"""
     def __init__(self):
-        # Load the environment variables
+        """Inicializa el procesador con configuración de la API"""
         load_dotenv('GEMINI_API_KEY.env')
         self.api_key = os.getenv('GEMINI_API_KEY')
         self.model_name = "gemini-1.5-flash"
         self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.model_name}:generateContent"
         
+        if not self.api_key:
+            logger.warning("GEMINI_API_KEY no configurado")
+        
     def process_query(self, query):
         """
-        Process a natural language query and extract relevant search keywords
+        Procesa consulta en lenguaje natural y extrae palabras clave relevantes
         
         Args:
-            query (str): The natural language query from the user
+            query (str): Consulta en lenguaje natural del usuario
             
         Returns:
-            dict: A dictionary with success status and processed keywords or error message
+            dict: Diccionario con estado de éxito y palabras clave procesadas o mensaje de error
         """
         try:
+            logger.info(f"Procesando consulta: {query[:50]}...")
             # Construct the prompt for Gemini API
             prompt = f"""
             Eres un asistente que convierte consultas en lenguaje natural a palabras clave relevantes para búsqueda de productos.
@@ -79,6 +87,7 @@ class GeminiProcessor:
             }
             
         except Exception as e:
+            logger.error(f"Error procesando consulta: {str(e)}")
             return {
                 "success": False,
                 "error": str(e)

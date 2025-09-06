@@ -12,6 +12,7 @@ from products.models import Product
 
 
 def recommendations(request):
+    """Vista que muestra recomendaciones de productos basadas en publicaciones de redes sociales"""
     category = request.GET.get('category', '').strip()
     query = request.GET.get('q', '').strip()
 
@@ -73,6 +74,7 @@ def recommendations(request):
 
 @login_required
 def connect_x(request):
+    """Vista para conectar la cuenta de X/Twitter del usuario con ComercIA"""
     try:
         existing = SocialAccount.objects.get(user=request.user)
     except SocialAccount.DoesNotExist:

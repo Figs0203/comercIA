@@ -56,6 +56,7 @@ def start_ngrok_view(request):
     return redirect('home')
 
 def home(request):
+    """Vista principal que muestra todos los productos con filtros de búsqueda"""
     products = Product.objects.all()
     
     # Búsqueda por nombre
@@ -115,6 +116,7 @@ def home(request):
 
 @login_required
 def add_product(request):
+    """Vista para agregar un nuevo producto al catálogo"""
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
@@ -132,6 +134,7 @@ def add_product(request):
 
 @login_required
 def edit_product(request, product_id):
+    """Vista para editar un producto existente"""
     product = get_object_or_404(Product, id=product_id)
     
     # Verificar que el usuario sea el dueño del producto
@@ -237,6 +240,7 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})
 
 def product_detail(request, product_id):
+    """Vista que muestra los detalles de un producto específico"""
     product = get_object_or_404(Product, id=product_id)
     comments = product.comments.all().order_by('-created_at')
     comment_form = CommentForm() if request.user.is_authenticated else None

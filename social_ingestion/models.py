@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 
 class SocialSource(models.Model):
+    """Modelo que representa una fuente de redes sociales para monitorear"""
     PLATFORM_CHOICES = [
         ("x", "X/Twitter"),
         ("telegram", "Telegram"),
@@ -24,6 +25,7 @@ class SocialSource(models.Model):
 
 
 class SocialPost(models.Model):
+    """Modelo que almacena publicaciones de redes sociales con categorías detectadas"""
     platform = models.CharField(max_length=20)
     post_id = models.CharField(max_length=255, unique=True)
     author = models.CharField(max_length=255)
@@ -44,6 +46,7 @@ class SocialPost(models.Model):
 
 
 class SocialAccount(models.Model):
+    """Modelo que vincula cuentas de usuarios con sus perfiles de redes sociales"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='social_account')
     platform = models.CharField(max_length=20, default='x')
     username = models.CharField(max_length=255, help_text='Username de X sin @')

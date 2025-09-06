@@ -98,37 +98,6 @@ class Command(BaseCommand):
                     )
                     saved_count += 1
 
-            fetched_count += len(posts)
-
-            for post in posts:
-                categories = recommend_categories_from_text(post.get("text", ""))
-                if not categories:
-                    continue
-                matched_count += 1
-
-                if dry_run:
-                    self.stdout.write(f"DRY: {source.platform} {post.get('id')} -> {categories}")
-                    continue
-
-                payload = dict(post)
-                if isinstance(payload.get("published_at"), datetime):
-                    payload["published_at"] = payload["published_at"].isoformat()
-
-                # Skip if already stored
-                if SocialPost.objects.filter(platform=source.platform, post_id=post["id"]).exists():
-                    continue
-
-                SocialPost.objects.create(
-                    platform=source.platform,
-                    post_id=post["id"],
-                    author=post.get("author", "unknown"),
-                    text=post.get("text", ""),
-                    published_at=post.get("published_at", datetime.now(dt_timezone.utc)),
-                    raw_payload=payload,
-                    matched_categories=",".join(categories),
-                )
-                saved_count += 1
-
         _LAST_FETCH_AT = now
 
         # Resumen amigable para el usuario
@@ -225,8 +194,87 @@ class Command(BaseCommand):
         return []
 
     def _fetch_telegram(self, source: SocialSource) -> list[dict[str, Any]]:
+        """Obtiene mensajes de un canal/grupo de Telegram usando Bot API"""
         bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
         chat_id = source.handle
+        
         if not bot_token:
+            self.stdout.write(self.style.WARNING("TELEGRAM_BOT_TOKEN no configurado."))
             return []
-        return []
+        
+        if not chat_id:
+            self.stdout.write(self.style.WARNING(f"Chat ID no configurado para fuente {source}"))
+            return []
+        
+        # Obtener el último mensaje procesado para evitar duplicados
+        latest = (
+            SocialPost.objects.filter(platform="telegram", author=chat_id)
+            .order_by("-published_at")
+            .first()
+        )
+        
+        # Configurar parámetros de la API
+        url = f"https://api.telegram.org/bot{bot_token}/getUpdates"
+        params = {
+            "chat_id": chat_id,
+            "limit": 20,  # Máximo 20 mensajes por request
+        }
+        
+        # Si tenemos un mensaje reciente, usar su ID como offset
+        if latest and latest.post_id.isnumeric():
+            params["offset"] = int(latest.post_id) + 1
+        
+        try:
+            response = requests.get(url, params=params, timeout=15)
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if not data.get("ok"):
+                    self.stdout.write(self.style.ERROR(f"Telegram API error: {data.get('description', 'Unknown error')}"))
+                    return []
+                
+                updates = data.get("result", [])
+                posts = []
+                
+                for update in updates:
+                    message = update.get("message", {})
+                    if not message:
+                        continue
+                    
+                    # Solo procesar mensajes de texto
+                    if "text" not in message:
+                        continue
+                    
+                    # Verificar que el mensaje sea del chat correcto
+                    chat = message.get("chat", {})
+                    if str(chat.get("id")) != str(chat_id):
+                        continue
+                    
+                    # Extraer información del mensaje
+                    message_id = str(message.get("message_id", ""))
+                    text = message.get("text", "")
+                    date = message.get("date", 0)
+                    
+                    # Convertir timestamp a datetime
+                    published_at = datetime.fromtimestamp(date, tz=dt_timezone.utc)
+                    
+                    posts.append({
+                        "id": message_id,
+                        "author": chat.get("title", chat.get("username", chat_id)),
+                        "text": text,
+                        "published_at": published_at,
+                    })
+                
+                return posts
+                
+            elif response.status_code == 429:
+                self.stdout.write(self.style.WARNING("Rate limit de Telegram alcanzado. Reintentando más tarde..."))
+                return []
+            else:
+                self.stdout.write(self.style.ERROR(f"Telegram API error: {response.status_code} - {response.text}"))
+                return []
+                
+        except requests.exceptions.RequestException as e:
+            self.stdout.write(self.style.ERROR(f"Telegram API request failed: {e}"))
+            return []

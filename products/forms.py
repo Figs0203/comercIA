@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 class ProductForm(forms.ModelForm):
+    """Formulario para crear y editar productos con validación personalizada"""
     class Meta:
         model = Product
         fields = [
@@ -64,6 +65,7 @@ class ProductForm(forms.ModelForm):
         return cleaned_data
 
 class CommentForm(forms.ModelForm):
+    """Formulario para agregar comentarios y calificaciones a productos"""
     class Meta:
         model = Comment
         fields = ['text', 'rating']
