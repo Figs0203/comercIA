@@ -69,7 +69,7 @@ El sistema se conecta con **redes sociales (X/Twitter)** y utiliza **Google Gemi
 ### ⚙️ Pasos de instalación
 ```bash
 # Clonar el repositorio
-git clone https://github.com/<tu-usuario>/<tu-repo>.git](https://github.com/Figs0203/comercIA.git
+git clone https://github.com/Figs0203/comercIA.git
 cd comercIA
 
 # Crear entorno virtual
