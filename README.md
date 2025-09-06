@@ -1,8 +1,3 @@
-¡Perfecto! 🚀 Te armo un **README.md** profesional, pensado para tu proyecto **ComercIA**, con secciones claras y útiles tanto para presentación académica como para repositorio público en GitHub.
-
-Aquí va la propuesta:
-
-````markdown
 # 🛒 ComercIA: Plataforma de Comercio con IA
 
 **ComercIA** es una plataforma de comercio electrónico desarrollada en **Django** que integra **inteligencia artificial** para mejorar la experiencia de compra y venta en el entorno universitario.  
