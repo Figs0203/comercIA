@@ -92,6 +92,32 @@ python manage.py runserver
 
 ---
 
+## Variables de entorno
+
+Crear un archivo `.env` en la raíz (no se sube a Git) basado en `.env.example`.
+
+Ejemplo:
+
+```
+SECRET_KEY=pon_aqui_una_clave_segura
+DEBUG=1
+
+# Gemini
+GEMINI_API_KEY=tu_api_key
+
+# X (Twitter)
+X_BEARER_TOKEN=tu_bearer_token
+X_USER_ID=1234567890
+# O alternativamente
+# X_USERNAME=mi_usuario
+X_MAX_RESULTS=3
+
+# Telegram
+TELEGRAM_BOT_TOKEN=token_de_telegram
+```
+
+---
+
 ## 📘 Documentación del proyecto
 
 El proyecto cuenta con una **wiki** donde se encuentran los documentos oficiales:
