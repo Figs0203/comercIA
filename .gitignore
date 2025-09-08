@@ -3,3 +3,6 @@
 staticfield+
 .env
 GEMINI_API_KEY.env
+*.env
+.env.*
+!.env.example

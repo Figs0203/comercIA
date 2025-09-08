@@ -11,6 +11,8 @@ class GeminiProcessor:
     """Procesador de consultas de lenguaje natural usando Google Gemini AI"""
     def __init__(self):
         """Inicializa el procesador con configuración de la API"""
+        # Cargar variables desde .env (general) y fallback al archivo específico si existe
+        load_dotenv()
         load_dotenv('GEMINI_API_KEY.env')
         self.api_key = os.getenv('GEMINI_API_KEY')
         self.model_name = "gemini-1.5-flash"

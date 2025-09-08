@@ -13,19 +13,23 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Cargar variables de entorno desde .env si existe
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-m92g&dlk@zvmt)r^eaxjodws)#%o*3encndp&7*p8&ef3e2eya'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-m92g&dlk@zvmt)r^eaxjodws)#%o*3encndp&7*p8&ef3e2eya')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'RENDER' not in os.environ
+DEBUG = os.getenv('DEBUG', '1') not in ['0', 'false', 'False'] and 'RENDER' not in os.environ
 
 # Permitir conexiones desde otros dispositivos en la red local y ngrok
 ALLOWED_HOSTS = []
@@ -162,10 +166,10 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Social ingestion external API endpoint (fill only this)
-# X API v2 configuration
-X_BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAF%2FH3wEAAAAAvicsnJRDfstqwlemCGxg%2Fj6iPDw%3Dlii5VORoYVYbeqBDIjgJtvCpiZfS4xNsSyPs7IyLmL0UUvQQjo"  # Obtener de https://developer.twitter.com
-X_USER_ID = "1963212843915923456"  # ID del usuario a analizar (ejemplo)
+# X API v2 configuration (leer desde variables de entorno)
+X_BEARER_TOKEN = os.getenv("X_BEARER_TOKEN", "")  # Obtener de https://developer.twitter.com
+X_USER_ID = os.getenv("X_USER_ID", "")  # ID del usuario a analizar
 # Opcional: si prefieres username, define X_USERNAME y omitimos X_USER_ID
-X_USERNAME = "testingAPIs01"  # ej. "TwitterDev" (sin @)
+X_USERNAME = os.getenv("X_USERNAME", "")  # ej. "TwitterDev" (sin @)
 # Limitar cantidad de tweets por petición (para ahorrar tokens)
-X_MAX_RESULTS = 3
+X_MAX_RESULTS = int(os.getenv("X_MAX_RESULTS", "3"))
