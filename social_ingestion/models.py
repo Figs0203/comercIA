@@ -61,4 +61,21 @@ class SocialAccount(models.Model):
     def __str__(self) -> str:
         return f"{self.user.username} -> {self.platform}:{self.username}"
 
+
+class UserInterest(models.Model):
+    """Modelo para que usuarios expresen sus intereses como posts de X"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='interests')
+    text = models.TextField(help_text="Texto del interés, ej: 'me gustan las manzanas'")
+    matched_categories = models.CharField(max_length=255, blank=True, help_text="Categorías detectadas del texto")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["user", "created_at"]),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.user.username}: {self.text[:50]}..."
+
 # Create your models here.

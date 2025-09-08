@@ -76,6 +76,7 @@ urlpatterns = [
     # Social ingestion URLs
     path('connect-x/', social_views.connect_x, name='connect_x'),
     path('recomendaciones/', social_views.recommendations, name='recommendations'),
+    path('mis-intereses/', social_views.add_interest, name='add_interest'),
     
     # Development URLs
     path('start-ngrok/', products_views.start_ngrok_view, name='start_ngrok'),
