@@ -14,6 +14,10 @@ from django.contrib.auth.models import User
 from .gemini_processor import GeminiProcessor
 import json
 import logging
+from django.core.paginator import Paginator
+from django.urls import reverse
+import requests
+from .services.reporting import get_report_generator
 
 # Importar pyngrok para poder iniciar ngrok desde Django
 from pyngrok import ngrok, conf
@@ -94,6 +98,11 @@ def home(request):
     
     # Ordenar por fecha de publicación
     products = products.order_by('-published_at')
+
+    # Paginación
+    paginator = Paginator(products, 12)
+    page_number = request.GET.get('page')
+    products_page = paginator.get_page(page_number)
     
     # Obtener favoritos del usuario
     user_favorites = []
@@ -101,7 +110,7 @@ def home(request):
         user_favorites = Favorite.objects.filter(user=request.user).values_list('product_id', flat=True)
     
     context = {
-        'products': products,
+        'products': products_page,
         'user_favorites': user_favorites,
         'search_query': search_query,
         'selected_category': category,
@@ -369,3 +378,49 @@ def chat_search(request):
     return JsonResponse({'success': False, 'error': 'Petición inválida'})
 
 # Create your views here.
+
+def products_api(request):
+    """JSON API: list available products with detail link"""
+    products = Product.objects.filter(available=True).order_by('-published_at')
+    data = []
+    lang = getattr(request, 'LANGUAGE_CODE', 'es')
+    for p in products:
+        name = p.name_en if lang == 'en' and getattr(p, 'name_en', None) else p.name
+        data.append({
+            'id': p.id,
+            'name': name,
+            'price': float(p.price),
+            'category': p.category,
+            'available': p.available,
+            'image_url': request.build_absolute_uri(p.image.url) if p.image else None,
+            'detail_url': request.build_absolute_uri(reverse('product_detail', args=[p.id])),
+        })
+    return JsonResponse({'count': len(data), 'results': data})
+
+
+def aliados_list(request):
+    """Consume allied team products API and render a list"""
+    api_url = getattr(settings, 'ALLY_PRODUCTS_API_URL', '')
+    aliados = []
+    error = None
+    if api_url:
+        try:
+            resp = requests.get(api_url, timeout=10)
+            resp.raise_for_status()
+            payload = resp.json()
+            aliados = payload.get('results', payload)
+        except Exception as e:
+            error = str(e)
+    else:
+        error = 'ALLY_PRODUCTS_API_URL no configurado'
+    return render(request, 'products/aliados.html', {'aliados': aliados, 'error': error})
+
+
+def download_report(request):
+    """Generate a report using DI and return as attachment"""
+    generator = get_report_generator()
+    products = Product.objects.all().order_by('-published_at')
+    content, content_type, filename = generator.generate(products)
+    response = HttpResponse(content, content_type=content_type)
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response

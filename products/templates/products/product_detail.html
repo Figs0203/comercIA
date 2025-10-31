@@ -1,6 +1,7 @@
 {% extends 'products/base.html' %}
 {% load humanize %}
 {% load form_tags %}
+{% load i18n %}
 
 {% block title %}{{ product.name }} - ComercIA{% endblock %}
 
@@ -535,25 +536,30 @@
                         </div>
                         
                         <!-- Título y precio -->
-                        <h1 class="product-title">{{ product.name }}</h1>
+                        {% get_current_language as LANGUAGE_CODE %}
+                        <h1 class="product-title">{% if LANGUAGE_CODE == 'en' and product.name_en %}{{ product.name_en }}{% else %}{{ product.name }}{% endif %}</h1>
                         <div class="product-price">$ {{ product.price|floatformat:0|intcomma }}</div>
                         
                         <!-- Estado -->
                         <span class="availability-badge {% if product.available %}badge-available{% else %}badge-unavailable{% endif %}">
-                            {% if product.available %}Disponible{% else %}No disponible{% endif %}
+                            {% if product.available %}{% trans "Disponible" %}{% else %}{% trans "No disponible" %}{% endif %}
                         </span>
                         
                         <!-- Calificación -->
                         {% if product.total_ratings > 0 %}
                             <div class="product-rating">
                                 <span class="rating-value">{{ product.average_rating }}</span>/5
-                                <span class="ms-2">({{ product.total_ratings }} reseñas)</span>
+                                <span class="ms-2">({{ product.total_ratings }} {% trans "reseñas" %})</span>
                             </div>
                             {% endif %}
                         
                         <!-- Descripción -->
                         <div class="product-description">
-                            {{ product.description|linebreaks }}
+                            {% if LANGUAGE_CODE == 'en' and product.description_en %}
+                                {{ product.description_en|linebreaks }}
+                            {% else %}
+                                {{ product.description|linebreaks }}
+                            {% endif %}
                         </div>
                         
                         <!-- Información del vendedor -->
@@ -583,17 +589,17 @@
                         <div class="action-buttons">
                             {% if user == product.seller %}
                                 <a href="{% url 'edit_product' product.id %}" class="btn btn-primary btn-action">
-                                    <i class="fas fa-edit me-2"></i>Editar producto
+                                    <i class="fas fa-edit me-2"></i>{% trans "Editar producto" %}
                                 </a>
                                 <a href="{% url 'delete_product' product.id %}" class="btn btn-outline-danger btn-action">
-                                    <i class="fas fa-trash me-2"></i>Eliminar producto
+                                    <i class="fas fa-trash me-2"></i>{% trans "Eliminar producto" %}
                                 </a>
                                     {% else %}
                             {% if user.is_authenticated %}
                                     <button onclick="toggleFavorite(event, {{ product.id }})" 
                                             class="btn {% if is_favorite %}btn-danger{% else %}btn-outline-danger{% endif %} btn-action">
                                         <i class="fas fa-heart me-2"></i>
-                                        {% if is_favorite %}Quitar de favoritos{% else %}Agregar a favoritos{% endif %}
+                                        {% if is_favorite %}{% trans "Quitar de favoritos" %}{% else %}{% trans "Agregar a favoritos" %}{% endif %}
                                 </button>
                             {% endif %}
                                 {% if whatsapp_link %}
@@ -602,7 +608,7 @@
                                        onclick="registerWhatsappClick({{ seller_profile.id }})"
                                        target="_blank"
                                        rel="noopener noreferrer">
-                                        <i class="fab fa-whatsapp me-2"></i>Contactar por WhatsApp
+                                        <i class="fab fa-whatsapp me-2"></i>{% trans "Contactar por WhatsApp" %}
                                     </a>
                                 {% endif %}
                             {% endif %}
@@ -615,7 +621,7 @@
         <!-- Sección de comentarios -->
         <div class="comments-section mt-5">
             <h3 class="mb-4">
-                <i class="fas fa-comments me-2"></i>Comentarios y Calificaciones
+                <i class="fas fa-comments me-2"></i>{% trans "Comentarios y Calificaciones" %}
             </h3>
             
             {% if user.is_authenticated %}
@@ -624,7 +630,7 @@
                     {% csrf_token %}
                         <div class="form-group mb-3">
                             <div class="star-rating-container">
-                                <label class="star-rating-label">Calificación:</label>
+                                <label class="star-rating-label">{% trans "Calificación:" %}</label>
                                 <div class="stars">
                                     <span class="star" data-rating="1"><i class="far fa-star"></i></span>
                                     <span class="star" data-rating="2"><i class="far fa-star"></i></span>
@@ -635,21 +641,21 @@
                                 <input type="hidden" name="rating" id="id_rating" value="0" required>
                             </div>
                             <div class="invalid-feedback d-none" id="rating-error">
-                                Por favor, selecciona una calificación.
+                                {% trans "Por favor, selecciona una calificación." %}
                             </div>
                         </div>
                         <div class="mb-3">
-                            <textarea name="text" class="form-control" rows="3" placeholder="Escribe tu comentario aquí..." required></textarea>
+                            <textarea name="text" class="form-control" rows="3" placeholder="{% trans 'Escribe tu comentario aquí...' %}" required></textarea>
                     </div>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane me-2"></i>Publicar Comentario
+                            <i class="fas fa-paper-plane me-2"></i>{% trans "Publicar Comentario" %}
                     </button>
                 </form>
                 </div>
             {% else %}
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle me-2"></i>
-                    <a href="{% url 'login' %}" class="alert-link">Inicia sesión</a> para dejar un comentario.
+                    <a href="{% url 'login' %}" class="alert-link">{% trans "Inicia sesión" %}</a> {% trans "para dejar un comentario." %}
                 </div>
             {% endif %}
             
@@ -672,13 +678,13 @@
                             <form action="{% url 'delete_comment' comment.id %}" method="post" class="d-inline">
                             {% csrf_token %}
                                 <button type="submit" class="btn btn-link text-danger p-0">
-                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                    <i class="fas fa-trash-alt"></i> {% trans "Eliminar" %}
                             </button>
                         </form>
                     {% endif %}
                 </div>
             {% empty %}
-                <p class="text-muted text-center">No hay comentarios aún. ¡Sé el primero en comentar!</p>
+                <p class="text-muted text-center">{% trans "No hay comentarios aún. ¡Sé el primero en comentar!" %}</p>
             {% endfor %}
             </div>
         </div>

@@ -1,7 +1,8 @@
 {% extends 'products/base.html' %}
 {% load form_tags %}
+{% load i18n %}
 
-{% block title %}Editar Producto - ComercIA{% endblock %}
+{% block title %}{% trans "Editar Producto" %} - ComercIA{% endblock %}
 
 {% block extra_styles %}
 {{ block.super }}
@@ -100,9 +101,9 @@
                 <div class="card form-card">
                     <div class="card-header text-center">
                         <h2 class="mb-0 fw-bold">
-                            <i class="fas fa-edit me-2"></i>Editar Producto
+                            <i class="fas fa-edit me-2"></i>{% trans "Editar Producto" %}
                         </h2>
-                        <p class="text-muted mt-2 mb-0">Actualiza la información de tu producto</p>
+                        <p class="text-muted mt-2 mb-0">{% trans "Actualiza la información de tu producto" %}</p>
                     </div>
                     
                     <div class="card-body p-4 p-lg-5">
@@ -247,9 +248,9 @@
                                             <div class="input-file-placeholder">
                                                 <i class="fas fa-cloud-upload-alt me-2"></i>
                                                 {% if product.image %}
-                                                    Cambiar imagen
+                                                    {% trans "Cambiar imagen" %}
                                                 {% else %}
-                                                    Seleccionar imagen
+                                                    {% trans "Seleccionar imagen" %}
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -258,7 +259,7 @@
                                     {% if product.image %}
                                         <div class="col-md-4">
                                             <div class="current-image">
-                                                <p class="small text-muted mb-2">Imagen actual:</p>
+                                                <p class="small text-muted mb-2">{% trans "Imagen actual:" %}</p>
                                                 <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail rounded-3" style="max-width: 100%; height: auto;">
                                             </div>
                                         </div>
@@ -277,10 +278,10 @@
                             
                             <div class="d-flex gap-3 mt-5">
                                 <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
-                                    <i class="fas fa-save me-2"></i>Guardar Cambios
+                                    <i class="fas fa-save me-2"></i>{% trans "Guardar Cambios" %}
                                 </button>
                                 <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-secondary btn-lg">
-                                    <i class="fas fa-times me-2"></i>Cancelar
+                                    <i class="fas fa-times me-2"></i>{% trans "Cancelar" %}
                                 </a>
                             </div>
                         </form>

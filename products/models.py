@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
@@ -39,8 +40,15 @@ class Product(models.Model):
 
     name = models.CharField(
         max_length=255,
-        verbose_name='Nombre',
-        help_text='Nombre del producto'
+        verbose_name=_('Nombre'),
+        help_text=_('Nombre del producto')
+    )
+    name_en = models.CharField(
+        max_length=255,
+        verbose_name='Nombre (English)',
+        help_text='Product name in English',
+        blank=True,
+        null=True
     )
     category = models.CharField(
         max_length=50,
@@ -57,41 +65,47 @@ class Product(models.Model):
         null=True
     )
     description = models.TextField(
-        verbose_name='Descripción',
-        help_text='Describe tu producto detalladamente'
+        verbose_name=_('Descripción'),
+        help_text=_('Describe tu producto detalladamente')
+    )
+    description_en = models.TextField(
+        verbose_name='Descripción (English)',
+        help_text='Describe your product in English',
+        blank=True,
+        null=True
     )
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(0.01)],
-        verbose_name='Precio',
-        help_text='Precio en pesos colombianos'
+        verbose_name=_('Precio'),
+        help_text=_('Precio en pesos colombianos')
     )
     published_at = models.DateTimeField(
         default=timezone.now,
-        verbose_name='Fecha de publicación'
+        verbose_name=_('Fecha de publicación')
     )
     condition = models.CharField(
         max_length=50,
         choices=CONDITION_CHOICES,
-        verbose_name='Estado',
+        verbose_name=_('Estado'),
         blank=True,
         null=True
     )
     image = models.ImageField(
         upload_to='products/',
-        verbose_name='Imagen',
-        help_text='Imagen del producto'
+        verbose_name=_('Imagen'),
+        help_text=_('Imagen del producto')
     )
     seller = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name='Vendedor',
+        verbose_name=_('Vendedor'),
         related_name='products'
     )
     available = models.BooleanField(
         default=True,
-        verbose_name='Disponible'
+        verbose_name=_('Disponible')
     )
 
     def clean(self):

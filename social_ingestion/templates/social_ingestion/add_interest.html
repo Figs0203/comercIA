@@ -1,0 +1,59 @@
+{% extends 'products/base.html' %}
+
+{% block title %}ComercIA - Mis Intereses{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h3 mb-0">¿Qué te interesa?</h1>
+                    <p class="text-muted mb-0">Escribe como en X para que te recomendemos productos</p>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ form.text.label_tag }}
+                            {{ form.text }}
+                            {% if form.text.help_text %}
+                                <div class="form-text">{{ form.text.help_text }}</div>
+                            {% endif %}
+                            {% if form.text.errors %}
+                                <div class="text-danger">{{ form.text.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'recommendations' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-heart me-1"></i>Agregar Interés
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h5>Ejemplos de intereses:</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">"me gustan las manzanas" → <span class="badge bg-success">Comida</span></li>
+                            <li class="list-group-item">"busco libros de ciencia" → <span class="badge bg-info">Libros</span></li>
+                            <li class="list-group-item">"necesito ropa deportiva" → <span class="badge bg-warning">Ropa</span></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">"quiero un smartphone" → <span class="badge bg-primary">Tecnología</span></li>
+                            <li class="list-group-item">"me encanta el café" → <span class="badge bg-success">Comida</span></li>
+                            <li class="list-group-item">"busco zapatos" → <span class="badge bg-warning">Ropa</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

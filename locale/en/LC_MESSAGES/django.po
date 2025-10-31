@@ -1,0 +1,651 @@
+# English translations
+msgid ""
+msgstr ""
+"Project-Id-Version: ComercIA\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-31 11:50-0500\n"
+"PO-Revision-Date: 2025-10-31 00:00+0000\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\products\forms.py:23 .\products\models.py:69
+msgid "Describe tu producto detalladamente"
+msgstr ""
+
+#: .\products\forms.py:41
+#, fuzzy
+#| msgid "No disponible"
+msgid "Producto disponible"
+msgstr "Unavailable"
+
+#: .\products\forms.py:42
+msgid "Desmarque esta opción si el producto no está disponible temporalmente"
+msgstr ""
+
+#: .\products\forms.py:60
+msgid "Debe seleccionar un tipo de comida"
+msgstr ""
+
+#: .\products\forms.py:65
+msgid "Debe seleccionar un estado para el producto"
+msgstr ""
+
+#: .\products\models.py:43
+msgid "Nombre"
+msgstr ""
+
+#: .\products\models.py:44
+#, fuzzy
+#| msgid "Todos los productos"
+msgid "Nombre del producto"
+msgstr "All products"
+
+#: .\products\models.py:68 .\seller_profiles\models.py:46
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:42
+msgid "Descripción"
+msgstr "Description"
+
+#: .\products\models.py:81
+msgid "Precio"
+msgstr ""
+
+#: .\products\models.py:82
+msgid "Precio en pesos colombianos"
+msgstr ""
+
+#: .\products\models.py:86
+msgid "Fecha de publicación"
+msgstr ""
+
+#: .\products\models.py:91
+msgid "Estado"
+msgstr ""
+
+#: .\products\models.py:97
+#, fuzzy
+#| msgid "Imagen actual:"
+msgid "Imagen"
+msgstr "Current Image:"
+
+#: .\products\models.py:98
+#, fuzzy
+#| msgid "Ver todos los productos"
+msgid "Imagen del producto"
+msgstr "View all products"
+
+#: .\products\models.py:103
+#, fuzzy
+#| msgid "Vendedores"
+msgid "Vendedor"
+msgstr "Sellers"
+
+#: .\products\models.py:108 .\products\templates\products\favorites.html:292
+#: .\products\templates\products\home.html:1028
+#: .\products\templates\products\product_detail.html:545
+#: .\seller_profiles\models.py:113
+msgid "Disponible"
+msgstr "Available"
+
+#: .\products\templates\products\add_product.html:5
+#: .\products\templates\products\add_product.html:15
+msgid "Agregar Producto"
+msgstr "Add Product"
+
+#: .\products\templates\products\add_product.html:17
+msgid "Completa el formulario para publicar tu producto"
+msgstr "Complete the form to publish your product"
+
+#: .\products\templates\products\add_product.html:131
+msgid "Selecciona una imagen"
+msgstr "Select an image"
+
+#: .\products\templates\products\add_product.html:146
+#: .\products\templates\products\home.html:809
+msgid "Publicar Producto"
+msgstr "Publish Product"
+
+#: .\products\templates\products\add_product.html:149
+#: .\products\templates\products\edit_product.html:284
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: .\products\templates\products\aliados.html:4
+#: .\products\templates\products\aliados.html:8
+msgid "Productos Aliados"
+msgstr "Partner Products"
+
+#: .\products\templates\products\aliados.html:9
+msgid "Volver"
+msgstr "Back"
+
+#: .\products\templates\products\aliados.html:30
+msgid "Ver"
+msgstr "View"
+
+#: .\products\templates\products\aliados.html:37
+msgid "No se encontraron productos aliados."
+msgstr "No partner products found."
+
+#: .\products\templates\products\base.html:265
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:5
+msgid "Vendedores"
+msgstr "Sellers"
+
+#: .\products\templates\products\base.html:270
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:4
+msgid "Recomendaciones"
+msgstr "Recommendations"
+
+#: .\products\templates\products\base.html:275
+msgid "Idioma"
+msgstr "Language"
+
+#: .\products\templates\products\base.html:297
+msgid "Favoritos"
+msgstr "Favorites"
+
+#: .\products\templates\products\base.html:302
+msgid "Publicar"
+msgstr "Publish"
+
+#: .\products\templates\products\base.html:312
+msgid "Conectar con X"
+msgstr "Connect with X"
+
+#: .\products\templates\products\base.html:317
+msgid "Mi Perfil de Vendedor"
+msgstr "My Seller Profile"
+
+#: .\products\templates\products\base.html:325
+msgid "Cerrar Sesión"
+msgstr "Log Out"
+
+#: .\products\templates\products\base.html:334
+msgid "Iniciar Sesión"
+msgstr "Log In"
+
+#: .\products\templates\products\base.html:339
+msgid "Registrarse"
+msgstr "Register"
+
+#: .\products\templates\products\edit_product.html:5
+#: .\products\templates\products\edit_product.html:104
+msgid "Editar Producto"
+msgstr "Edit Product"
+
+#: .\products\templates\products\edit_product.html:106
+msgid "Actualiza la información de tu producto"
+msgstr "Update your product information"
+
+#: .\products\templates\products\edit_product.html:251
+msgid "Cambiar imagen"
+msgstr "Change Image"
+
+#: .\products\templates\products\edit_product.html:253
+msgid "Seleccionar imagen"
+msgstr "Select Image"
+
+#: .\products\templates\products\edit_product.html:262
+msgid "Imagen actual:"
+msgstr "Current Image:"
+
+#: .\products\templates\products\edit_product.html:281
+msgid "Guardar Cambios"
+msgstr "Save Changes"
+
+#: .\products\templates\products\favorites.html:5
+#: .\products\templates\products\favorites.html:256
+msgid "Mis Favoritos"
+msgstr "My Favorites"
+
+#: .\products\templates\products\favorites.html:257
+msgid "Aquí encontrarás todos los productos que has marcado como favoritos"
+msgstr "Here you'll find all the products you've marked as favorites"
+
+#: .\products\templates\products\favorites.html:268
+msgid "Eliminar de favoritos"
+msgstr "Remove from favorites"
+
+#: .\products\templates\products\favorites.html:296
+#: .\products\templates\products\home.html:1030
+#: .\products\templates\products\product_detail.html:545
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:82
+msgid "No disponible"
+msgstr "Unavailable"
+
+#: .\products\templates\products\favorites.html:308
+msgid "No tienes favoritos"
+msgstr "You have no favorites"
+
+#: .\products\templates\products\favorites.html:309
+msgid "Encuentra productos que te gusten y agrégalos a tus favoritos"
+msgstr "Find products you like and add them to your favorites"
+
+#: .\products\templates\products\favorites.html:311
+msgid "Explorar productos"
+msgstr "Explore products"
+
+#: .\products\templates\products\home.html:5
+msgid "Inicio"
+msgstr "Home"
+
+#: .\products\templates\products\home.html:795
+msgid "¡Bienvenido a ComercIA!"
+msgstr "Welcome to ComercIA!"
+
+#: .\products\templates\products\home.html:796
+msgid "Tu marketplace inteligente con recomendaciones personalizadas"
+msgstr "Your smart marketplace with personalized recommendations"
+
+#: .\products\templates\products\home.html:797
+msgid ""
+"Descubre productos perfectos para ti basados en tus intereses y "
+"publicaciones de redes sociales. Conectamos con X y Telegram para ofrecerte "
+"las mejores recomendaciones."
+msgstr ""
+"Discover products perfect for you based on your interests and social media "
+"posts. We connect with X and Telegram to bring you the best recommendations."
+
+#: .\products\templates\products\home.html:802
+msgid "Comenzar como vendedor"
+msgstr "Start as seller"
+
+#: .\products\templates\products\home.html:805
+#: .\products\templates\products\home.html:815
+msgid "Unirse al grupo"
+msgstr "Join the group"
+
+#: .\products\templates\products\home.html:812
+msgid "Ver Recomendaciones"
+msgstr "View Recommendations"
+
+#: .\products\templates\products\home.html:829
+msgid "¿Cómo funciona ComercIA?"
+msgstr "How does ComercIA work?"
+
+#: .\products\templates\products\home.html:830
+msgid ""
+"Una plataforma inteligente que conecta tus intereses con productos perfectos"
+msgstr ""
+"An intelligent platform that connects your interests with perfect products"
+
+#: .\products\templates\products\home.html:841
+msgid "Expresa tus intereses"
+msgstr "Express your interests"
+
+#: .\products\templates\products\home.html:842
+msgid ""
+"Escribe lo que te gusta como en X: 'me gustan las manzanas' o 'busco libros "
+"de ciencia'"
+msgstr ""
+"Write what you like as on X: 'I like apples' or 'looking for science books'"
+
+#: .\products\templates\products\home.html:853
+msgid "Conecta tus redes"
+msgstr "Connect your networks"
+
+#: .\products\templates\products\home.html:854
+msgid ""
+"Vincula tu cuenta de X para que detectemos automáticamente tus publicaciones"
+msgstr "Link your X account so we can automatically detect your posts"
+
+#: .\products\templates\products\home.html:865
+msgid "Recibe recomendaciones"
+msgstr "Get recommendations"
+
+#: .\products\templates\products\home.html:866
+msgid ""
+"Obtén sugerencias personalizadas de productos que realmente te interesan"
+msgstr "Get personalized product suggestions that truly interest you"
+
+#: .\products\templates\products\home.html:886
+msgid "Buscar productos..."
+msgstr "Search products..."
+
+#: .\products\templates\products\home.html:902
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:78
+msgid "Filtros"
+msgstr "Filters"
+
+#: .\products\templates\products\home.html:913
+msgid "Categoría"
+msgstr "Category"
+
+#: .\products\templates\products\home.html:916
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:20
+msgid "Todas las categorías"
+msgstr "All categories"
+
+#: .\products\templates\products\home.html:927
+msgid "Todos los tipos"
+msgstr "All types"
+
+#: .\products\templates\products\home.html:940
+msgid "Rango de precios"
+msgstr "Price range"
+
+#: .\products\templates\products\home.html:950
+msgid "Mínimo"
+msgstr "Minimum"
+
+#: .\products\templates\products\home.html:962
+msgid "Máximo"
+msgstr "Maximum"
+
+#: .\products\templates\products\home.html:984
+msgid "Resultados de búsqueda"
+msgstr "Search results"
+
+#: .\products\templates\products\home.html:986
+msgid "Todos los productos"
+msgstr "All products"
+
+#: .\products\templates\products\home.html:1016
+#: .\products\templates\products\product_detail.html:602
+msgid "Quitar de favoritos"
+msgstr "Remove from favorites"
+
+#: .\products\templates\products\home.html:1016
+#: .\products\templates\products\product_detail.html:602
+msgid "Agregar a favoritos"
+msgstr "Add to favorites"
+
+#: .\products\templates\products\home.html:1049
+msgid "No se encontraron productos"
+msgstr "No products found"
+
+#: .\products\templates\products\home.html:1051
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:165
+msgid "Intenta con otros términos de búsqueda o filtros"
+msgstr "Try other search terms or filters"
+
+#: .\products\templates\products\home.html:1053
+msgid "Ver todos los productos"
+msgstr "View all products"
+
+#: .\products\templates\products\home.html:1056
+msgid "Sé el primero en publicar un producto"
+msgstr "Be the first to publish a product"
+
+#: .\products\templates\products\product_detail.html:552
+msgid "reseñas"
+msgstr "reviews"
+
+#: .\products\templates\products\product_detail.html:592
+msgid "Editar producto"
+msgstr "Edit product"
+
+#: .\products\templates\products\product_detail.html:595
+msgid "Eliminar producto"
+msgstr "Delete product"
+
+#: .\products\templates\products\product_detail.html:611
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:32
+msgid "Contactar por WhatsApp"
+msgstr "Contact via WhatsApp"
+
+#: .\products\templates\products\product_detail.html:624
+msgid "Comentarios y Calificaciones"
+msgstr "Comments and Ratings"
+
+#: .\products\templates\products\product_detail.html:633
+msgid "Calificación:"
+msgstr "Rating:"
+
+#: .\products\templates\products\product_detail.html:644
+msgid "Por favor, selecciona una calificación."
+msgstr "Please select a rating."
+
+#: .\products\templates\products\product_detail.html:648
+msgid "Escribe tu comentario aquí..."
+msgstr "Write your comment here..."
+
+#: .\products\templates\products\product_detail.html:651
+msgid "Publicar Comentario"
+msgstr "Post Comment"
+
+#: .\products\templates\products\product_detail.html:658
+msgid "Inicia sesión"
+msgstr "Log in"
+
+#: .\products\templates\products\product_detail.html:658
+msgid "para dejar un comentario."
+msgstr "to leave a comment."
+
+#: .\products\templates\products\product_detail.html:681
+msgid "Eliminar"
+msgstr "Delete"
+
+#: .\products\templates\products\product_detail.html:687
+msgid "No hay comentarios aún. ¡Sé el primero en comentar!"
+msgstr "No comments yet. Be the first to comment!"
+
+#: .\seller_profiles\models.py:22
+msgid "Foto de perfil"
+msgstr ""
+
+#: .\seller_profiles\models.py:28
+msgid "Nombre de la tienda"
+msgstr ""
+
+#: .\seller_profiles\models.py:29
+msgid "Nombre que se mostrará en tu perfil de vendedor"
+msgstr ""
+
+#: .\seller_profiles\models.py:33
+msgid "Slogan"
+msgstr ""
+
+#: .\seller_profiles\models.py:34
+msgid "Una frase corta que describa tu tienda"
+msgstr ""
+
+#: .\seller_profiles\models.py:40
+msgid "Slogan (English)"
+msgstr ""
+
+#: .\seller_profiles\models.py:41
+msgid "English version of your store slogan"
+msgstr ""
+
+#: .\seller_profiles\models.py:47
+msgid "Describe tu tienda y los productos que vendes"
+msgstr ""
+
+#: .\seller_profiles\models.py:50
+#, fuzzy
+#| msgid "Descripción"
+msgid "Descripción (English)"
+msgstr "Description"
+
+#: .\seller_profiles\models.py:51
+msgid "Describe your store and products (English)"
+msgstr ""
+
+#: .\seller_profiles\models.py:57
+msgid "WhatsApp"
+msgstr ""
+
+#: .\seller_profiles\models.py:58
+msgid "Ingresa tu número de WhatsApp con código de país (ej: 573001234567)"
+msgstr ""
+
+# Day names from seller profiles schedules
+#: .\seller_profiles\models.py:94
+msgid "Lunes"
+msgstr "Monday"
+
+#: .\seller_profiles\models.py:95
+msgid "Martes"
+msgstr "Tuesday"
+
+#: .\seller_profiles\models.py:96
+msgid "Miércoles"
+msgstr "Wednesday"
+
+#: .\seller_profiles\models.py:97
+msgid "Jueves"
+msgstr "Thursday"
+
+#: .\seller_profiles\models.py:98
+msgid "Viernes"
+msgstr "Friday"
+
+#: .\seller_profiles\models.py:109
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:65
+msgid "Día"
+msgstr "Day"
+
+#: .\seller_profiles\models.py:116
+#, fuzzy
+#| msgid "Horario de Atención"
+msgid "Hora de inicio"
+msgstr "Business Hours"
+
+#: .\seller_profiles\models.py:119
+msgid ""
+"Horario de inicio (entre 6:00 AM y 9:30 PM, en intervalos de 30 minutos)"
+msgstr ""
+
+#: .\seller_profiles\models.py:122
+msgid "Hora de cierre"
+msgstr ""
+
+#: .\seller_profiles\models.py:125
+msgid ""
+"Horario de cierre (entre 6:30 AM y 10:00 PM, en intervalos de 30 minutos)"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:58
+msgid "Horario de Atención"
+msgstr "Business Hours"
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:66
+msgid "Horario"
+msgstr "Schedule"
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:98
+msgid "personas han visto este perfil."
+msgstr "people have viewed this profile."
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:104
+msgid "Productos de"
+msgstr "Products by"
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:122
+msgid "Ver detalles"
+msgstr "View details"
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:131
+msgid "Este vendedor aún no tiene productos disponibles."
+msgstr "This seller doesn't have any available products."
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:10
+msgid "Explora Nuestros Vendedores"
+msgstr "Explore Our Sellers"
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:11
+msgid "Descubre la variedad de tiendas y productos disponibles en ComercIA"
+msgstr "Discover the variety of stores and products available on ComercIA"
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:16
+msgid "Vendedores Más Populares"
+msgstr "Most Popular Sellers"
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:34
+#, python-format
+msgid "%(n)s visita"
+msgid_plural "%(n)s visitas"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:62
+msgid "Buscar vendedores..."
+msgstr "Search sellers..."
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:90
+msgid "Filtrar por categorías de productos"
+msgstr "Filter by product categories"
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:102
+msgid "Selecciona múltiples categorías con la tecla Ctrl"
+msgstr "Select multiple categories using the Ctrl key"
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:106
+msgid "Aplicar filtros"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:109
+msgid "Limpiar filtros"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:163
+msgid "No se encontraron vendedores"
+msgstr "No sellers found"
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:167
+msgid "Ver todos los vendedores"
+msgstr "View all sellers"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:9
+msgid "Recomendaciones detectadas"
+msgstr "Detected Recommendations"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:12
+msgid "Agregar Interés"
+msgstr "Add Interest"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:27
+msgid "Buscar por texto o autor"
+msgstr "Search by text or author"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:30
+msgid "Filtrar"
+msgstr "Filter"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:36
+msgid "Categorías detectadas:"
+msgstr "Detected categories:"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:42
+msgid "Productos recomendados"
+msgstr "Recommended products"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:61
+msgid "No hay productos recomendados para estas categorías."
+msgstr "No recommended products for these categories."
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:66
+msgid "Publicaciones detectadas"
+msgstr "Detected posts"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:71
+msgid "Mis intereses recientes"
+msgstr "My recent interests"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:119
+msgid "Anterior"
+msgstr "Previous"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:121
+msgid "Página"
+msgstr "Page"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:121
+msgid "de"
+msgstr "of"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:123
+msgid "Siguiente"
+msgstr "Next"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:130
+msgid "No hay recomendaciones por el momento"
+msgstr "There are no recommendations at the moment"
+
+#: .\social_ingestion\templates\social_ingestion\recommendations.html:131
+msgid "Vuelve más tarde para ver nuevas sugerencias."
+msgstr "Come back later to see new suggestions."

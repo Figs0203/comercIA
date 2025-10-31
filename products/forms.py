@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from .models import Product, Comment
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -8,18 +9,20 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = [
-            'name', 'category', 'food_type', 'description', 'price',
+            'name', 'name_en', 'category', 'food_type', 'description', 'description_en', 'price',
             'condition', 'image', 'available'
         ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control', 'id': 'id_category'}),
+            'name_en': forms.TextInput(attrs={'class': 'form-control'}),
             'food_type': forms.Select(attrs={'class': 'form-control', 'id': 'id_food_type'}),
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 4,
-                'placeholder': 'Describe tu producto detalladamente'
+                'placeholder': _('Describe tu producto detalladamente')
             }),
+            'description_en': forms.Textarea(attrs={'class': 'form-control','rows': 4}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'condition': forms.Select(attrs={'class': 'form-control', 'id': 'id_condition'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
@@ -35,8 +38,8 @@ class ProductForm(forms.ModelForm):
         self.fields['condition'].required = False
         
         # Configuración específica para el campo available
-        self.fields['available'].label = 'Producto disponible'
-        self.fields['available'].help_text = 'Desmarque esta opción si el producto no está disponible temporalmente'
+        self.fields['available'].label = _('Producto disponible')
+        self.fields['available'].help_text = _('Desmarque esta opción si el producto no está disponible temporalmente')
         
         # Si es una instancia nueva (creación), excluimos el campo available
         if not kwargs.get('instance'):
@@ -54,12 +57,12 @@ class ProductForm(forms.ModelForm):
         if category == 'Comida':
             food_type = cleaned_data.get('food_type')
             if not food_type:
-                self.add_error('food_type', 'Debe seleccionar un tipo de comida')
+                self.add_error('food_type', _('Debe seleccionar un tipo de comida'))
             cleaned_data['condition'] = None
         else:
             condition = cleaned_data.get('condition')
             if not condition:
-                self.add_error('condition', 'Debe seleccionar un estado para el producto')
+                self.add_error('condition', _('Debe seleccionar un estado para el producto'))
             cleaned_data['food_type'] = None
         
         return cleaned_data

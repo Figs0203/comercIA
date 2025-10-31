@@ -1,7 +1,8 @@
 {% extends 'products/base.html' %}
 {% load humanize %}
+{% load i18n %}
 
-{% block title %}Mis Favoritos - ComercIA{% endblock %}
+{% block title %}{% trans "Mis Favoritos" %} - ComercIA{% endblock %}
 
 {% block extra_styles %}
 <style>
@@ -252,8 +253,8 @@
 <div class="favorites-container">
     {% csrf_token %}
     <div class="favorites-header">
-        <h1>Mis Favoritos</h1>
-        <p>Aquí encontrarás todos los productos que has marcado como favoritos</p>
+        <h1>{% trans "Mis Favoritos" %}</h1>
+        <p>{% trans "Aquí encontrarás todos los productos que has marcado como favoritos" %}</p>
     </div>
 
     <div id="favorites-content">
@@ -264,7 +265,7 @@
                 <button 
                     onclick="toggleFavorite(event, '{{ favorite.product.id }}')"
                     class="favorite-btn" 
-                    title="Eliminar de favoritos"
+                    title="{% trans 'Eliminar de favoritos' %}"
                 >
                     <i class="fas fa-heart"></i>
                 </button>
@@ -288,11 +289,11 @@
                             <span class="product-price">$ {{ favorite.product.price|floatformat:0|intcomma }}</span>
                             {% if favorite.product.available %}
                             <span class="availability-badge text-success">
-                                <i class="fas fa-check-circle"></i>Disponible
+                                <i class="fas fa-check-circle"></i>{% trans "Disponible" %}
                             </span>
                             {% else %}
                             <span class="availability-badge text-danger">
-                                <i class="fas fa-times-circle"></i>No disponible
+                                <i class="fas fa-times-circle"></i>{% trans "No disponible" %}
                             </span>
                             {% endif %}
                         </div>
@@ -304,10 +305,10 @@
         {% else %}
         <div class="empty-state">
             <i class="far fa-heart"></i>
-            <h3>No tienes favoritos</h3>
-            <p>Encuentra productos que te gusten y agrégalos a tus favoritos</p>
+            <h3>{% trans "No tienes favoritos" %}</h3>
+            <p>{% trans "Encuentra productos que te gusten y agrégalos a tus favoritos" %}</p>
             <a href="{% url 'home' %}" class="btn btn-primary">
-                <i class="fas fa-search me-2"></i>Explorar productos
+                <i class="fas fa-search me-2"></i>{% trans "Explorar productos" %}
             </a>
         </div>
         {% endif %}

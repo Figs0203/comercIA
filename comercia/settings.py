@@ -68,6 +68,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -130,13 +131,23 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
 USE_TZ = True
+
+# Internationalization languages and locale paths
+LANGUAGES = [
+    ('es', 'Español'),
+    ('en', 'English'),
+]
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 
 # Static files (CSS, JavaScript, Images)
@@ -173,3 +184,9 @@ X_USER_ID = os.getenv("X_USER_ID", "")  # ID del usuario a analizar
 X_USERNAME = os.getenv("X_USERNAME", "")  # ej. "TwitterDev" (sin @)
 # Limitar cantidad de tweets por petición (para ahorrar tokens)
 X_MAX_RESULTS = int(os.getenv("X_MAX_RESULTS", "3"))
+
+# Allies API URL (service from previous team)
+ALLY_PRODUCTS_API_URL = os.getenv('ALLY_PRODUCTS_API_URL', '')
+
+# Report generator strategy: 'csv' or 'json'
+REPORT_GENERATOR = os.getenv('REPORT_GENERATOR', 'csv')

@@ -71,6 +71,19 @@
                                 </div>
                             {% endif %}
                         </div>
+                        <!-- Slogan (English) -->
+                        <div class="mb-4">
+                            <label class="form-label">{{ form.slogan_en.label }}</label>
+                            {{ form.slogan_en }}
+                            {% if form.slogan_en.help_text %}
+                                <div class="form-text">{{ form.slogan_en.help_text }}</div>
+                            {% endif %}
+                            {% if form.slogan_en.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.slogan_en.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
                         
                         <!-- Descripción -->
                         <div class="mb-4">
@@ -82,6 +95,19 @@
                             {% if form.description.errors %}
                                 <div class="invalid-feedback d-block">
                                     {{ form.description.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <!-- Description (English) -->
+                        <div class="mb-4">
+                            <label class="form-label">{{ form.description_en.label }}</label>
+                            {{ form.description_en }}
+                            {% if form.description_en.help_text %}
+                                <div class="form-text">{{ form.description_en.help_text }}</div>
+                            {% endif %}
+                            {% if form.description_en.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.description_en.errors|join:", " }}
                                 </div>
                             {% endif %}
                         </div>

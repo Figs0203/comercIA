@@ -1,5 +1,7 @@
 {% extends 'seller_profiles/profile_base.html' %}
 {% load humanize %}
+{% load i18n %}
+{% load i18n %}
 
 {% block content %}
 <section class="profile-section py-5">
@@ -16,7 +18,10 @@
                     {% endif %}
                 </div>
                 <h1 class="store-name">{{ profile.store_name }}</h1>
-                {% if profile.slogan %}
+                {% get_current_language as LANGUAGE_CODE %}
+                {% if LANGUAGE_CODE == 'en' and profile.slogan_en %}
+                    <p class="store-slogan">{{ profile.slogan_en }}</p>
+                {% elif profile.slogan %}
                     <p class="store-slogan">{{ profile.slogan }}</p>
                 {% endif %}
                 {% if profile.whatsapp %}
@@ -24,7 +29,7 @@
                        class="btn btn-success btn-action whatsapp-button fixed-whatsapp"
                        target="_blank"
                        rel="noopener noreferrer">
-                        <i class="fab fa-whatsapp me-2"></i>Contactar por WhatsApp
+                        <i class="fab fa-whatsapp me-2"></i>{% trans "Contactar por WhatsApp" %}
                     </a>
                 {% endif %}
             </div>
@@ -34,10 +39,15 @@
                     <div class="col-lg-6">
                         <div class="info-card">
                             <div class="info-card-header">
-                                <i class="fas fa-info-circle me-2"></i>Descripción
+                                <i class="fas fa-info-circle me-2"></i>{% trans "Descripción" %}
                             </div>
                             <div class="info-card-body">
-                                <p class="lead mb-0">{{ profile.description }}</p>
+                                {% get_current_language as LANGUAGE_CODE %}
+                                {% if LANGUAGE_CODE == 'en' and profile.description_en %}
+                                    <p class="lead mb-0">{{ profile.description_en }}</p>
+                                {% else %}
+                                    <p class="lead mb-0">{{ profile.description }}</p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -45,15 +55,15 @@
                     <div class="col-lg-6">
                         <div class="info-card">
                             <div class="info-card-header">
-                                <i class="fas fa-clock me-2"></i>Horario de Atención
+                                <i class="fas fa-clock me-2"></i>{% trans "Horario de Atención" %}
                             </div>
                             <div class="info-card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table schedule-table mb-0">
                                         <thead>
                                             <tr>
-                                                <th>Día</th>
-                                                <th>Horario</th>
+                                                <th>{% trans "Día" %}</th>
+                                                <th>{% trans "Horario" %}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -69,7 +79,7 @@
                                                     {% else %}
                                                         <span class="text-muted">
                                                             <i class="fas fa-times-circle me-2"></i>
-                                                            No disponible
+                                                            {% trans "No disponible" %}
                                                         </span>
                                                     {% endif %}
                                                 </td>
@@ -85,13 +95,13 @@
 
                 <p class="text-muted mt-2">
                     <i class="fas fa-eye me-1"></i>
-                    {{ total_clicks }} personas han visto este perfil.
+                    {{ total_clicks }} {% trans "personas han visto este perfil." %}
                 </p>
 
                 <!-- Sección de productos del vendedor -->
                 <div class="seller-products mt-5">
                     <h2 class="section-title">
-                        <i class="fas fa-box me-2"></i>Productos de {{ profile.store_name }}
+                        <i class="fas fa-box me-2"></i>{% trans "Productos de" %} {{ profile.store_name }}
                     </h2>
                     
                     <div class="row g-4 mt-3">
@@ -109,7 +119,7 @@
                                             <div class="product-details">
                                                 <h3 class="product-title">{{ product.name }}</h3>
                                                 <div class="product-price">$ {{ product.price|floatformat:0|intcomma }}</div>
-                                                <div class="view-details mt-3">Ver detalles</div>
+                                                <div class="view-details mt-3">{% trans "Ver detalles" %}</div>
                                             </div>
                                         </div>
                                     </a>
@@ -118,7 +128,7 @@
                         {% empty %}
                             <div class="col-12 empty-products">
                                 <i class="fas fa-box-open"></i>
-                                <p>Este vendedor aún no tiene productos disponibles.</p>
+                                <p>{% trans "Este vendedor aún no tiene productos disponibles." %}</p>
                             </div>
                         {% endfor %}
                     </div>

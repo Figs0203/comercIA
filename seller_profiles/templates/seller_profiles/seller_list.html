@@ -1,18 +1,19 @@
 {% extends 'products/base.html' %}
 {% load humanize %}
+{% load i18n %}
 
-{% block title %}Vendedores - ComercIA{% endblock %}
+{% block title %}{% trans "Vendedores" %} - ComercIA{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="section-header mb-4">
-        <h1 class="display-5 text-center fw-bold">Explora Nuestros Vendedores</h1>
-        <p class="text-center text-muted mb-0">Descubre la variedad de tiendas y productos disponibles en ComercIA</p>
+        <h1 class="display-5 text-center fw-bold">{% trans "Explora Nuestros Vendedores" %}</h1>
+        <p class="text-center text-muted mb-0">{% trans "Descubre la variedad de tiendas y productos disponibles en ComercIA" %}</p>
     </div>
     
     <!-- Vendedores destacados como carousel -->
     <div class="featured-vendors-section mb-5">
-        <h2 class="section-title mb-4 text-center fw-bold">Vendedores Más Populares</h2>
+        <h2 class="section-title mb-4 text-center fw-bold">{% trans "Vendedores Más Populares" %}</h2>
         <div class="vendors-carousel-container">
             <div class="vendors-carousel">
                 {% for seller in top_sellers %}
@@ -29,7 +30,8 @@
                             </div>
                             <h3 class="vendor-name">{{ seller.store_name }}</h3>
                             <div class="vendor-visits">
-                                <i class="fas fa-eye"></i> {{ seller.clicks.count }} visitas
+                                <i class="fas fa-eye"></i>
+                                {% blocktrans count n=seller.clicks.count %}{{ n }} visita{% plural %}{{ n }} visitas{% endblocktrans %}
                             </div>
                         </a>
                     </div>
@@ -57,7 +59,7 @@
                             <input type="text" 
                                 name="search" 
                                 class="form-control search-input"
-                                placeholder="Buscar vendedores..."
+                                placeholder="{% trans 'Buscar vendedores...' %}"
                                 value="{{ search_query }}">
                             <button type="submit" class="btn btn-primary search-btn">
                                 <i class="fas fa-search"></i>
@@ -73,7 +75,7 @@
                                 data-bs-target="#filterOptions" 
                                 aria-expanded="false" 
                                 aria-controls="filterOptions">
-                            <i class="fas fa-filter me-2"></i>Filtros
+                            <i class="fas fa-filter me-2"></i>{% trans "Filtros" %}
                             {% if selected_categories %}
                                 <span class="badge bg-primary ms-2">{{ selected_categories|length }}</span>
                             {% endif %}
@@ -85,7 +87,7 @@
                 <div class="collapse mt-4" id="filterOptions">
                     <div class="filter-card">
                         <div class="filter-card-header">
-                            <i class="fas fa-tags me-2"></i>Filtrar por categorías de productos
+                            <i class="fas fa-tags me-2"></i>{% trans "Filtrar por categorías de productos" %}
                         </div>
                         <div class="filter-card-body">
                             <div class="category-selection">
@@ -97,14 +99,14 @@
                                         </option>
                                     {% endfor %}
                                 </select>
-                                <div class="form-text mb-3">Selecciona múltiples categorías con la tecla Ctrl</div>
+                                <div class="form-text mb-3">{% trans "Selecciona múltiples categorías con la tecla Ctrl" %}</div>
                             </div>
                             <div class="filter-actions">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-check me-2"></i>Aplicar filtros
+                                    <i class="fas fa-check me-2"></i>{% trans "Aplicar filtros" %}
                                 </button>
                                 <a href="{% url 'seller_list' %}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-undo me-2"></i>Limpiar filtros
+                                    <i class="fas fa-undo me-2"></i>{% trans "Limpiar filtros" %}
                                 </a>
                             </div>
                         </div>
@@ -136,7 +138,10 @@
                         
                         <div class="seller-content">
                             <h3 class="seller-name">{{ seller_data.profile.store_name }}</h3>
-                            {% if seller_data.profile.slogan %}
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% if LANGUAGE_CODE == 'en' and seller_data.profile.slogan_en %}
+                                <p class="seller-slogan">{{ seller_data.profile.slogan_en }}</p>
+                            {% elif seller_data.profile.slogan %}
                                 <p class="seller-slogan">{{ seller_data.profile.slogan }}</p>
                             {% endif %}
                             
@@ -155,11 +160,11 @@
         {% empty %}
             <div class="col-12 empty-state">
                 <i class="fas fa-store-alt-slash"></i>
-                <h3>No se encontraron vendedores</h3>
+                <h3>{% trans "No se encontraron vendedores" %}</h3>
                 {% if search_query or selected_categories %}
-                    <p>Intenta con otros términos de búsqueda o filtros</p>
+                    <p>{% trans "Intenta con otros términos de búsqueda o filtros" %}</p>
                     <a href="{% url 'seller_list' %}" class="btn btn-outline-primary mt-3">
-                        <i class="fas fa-undo me-2"></i>Ver todos los vendedores
+                        <i class="fas fa-undo me-2"></i>{% trans "Ver todos los vendedores" %}
                     </a>
                 {% endif %}
             </div>

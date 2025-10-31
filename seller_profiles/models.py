@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 import re
 import urllib.parse
 from django.utils.timezone import now
+from django.utils.translation import gettext_lazy as _
 import pytz
 
 # Configuración para la zona horaria de Colombia (UTC-5)
@@ -18,30 +19,43 @@ class SellerProfile(models.Model):
     )
     profile_image = models.ImageField(
         upload_to='profiles/',
-        verbose_name='Foto de perfil',
+        verbose_name=_('Foto de perfil'),
         null=True,
         blank=True
     )
     store_name = models.CharField(
         max_length=100,
-        verbose_name='Nombre de la tienda',
-        help_text='Nombre que se mostrará en tu perfil de vendedor'
+        verbose_name=_('Nombre de la tienda'),
+        help_text=_('Nombre que se mostrará en tu perfil de vendedor')
     )
     slogan = models.CharField(
         max_length=200,
-        verbose_name='Slogan',
-        help_text='Una frase corta que describa tu tienda',
+        verbose_name=_('Slogan'),
+        help_text=_('Una frase corta que describa tu tienda'),
+        blank=True,
+        null=True
+    )
+    slogan_en = models.CharField(
+        max_length=200,
+        verbose_name=_('Slogan (English)'),
+        help_text=_('English version of your store slogan'),
         blank=True,
         null=True
     )
     description = models.TextField(
-        verbose_name='Descripción',
-        help_text='Describe tu tienda y los productos que vendes'
+        verbose_name=_('Descripción'),
+        help_text=_('Describe tu tienda y los productos que vendes')
+    )
+    description_en = models.TextField(
+        verbose_name=_('Descripción (English)'),
+        help_text=_('Describe your store and products (English)'),
+        blank=True,
+        null=True
     )
     whatsapp = models.CharField(
         max_length=15,
-        verbose_name='WhatsApp',
-        help_text='Ingresa tu número de WhatsApp con código de país (ej: 573001234567)',
+        verbose_name=_('WhatsApp'),
+        help_text=_('Ingresa tu número de WhatsApp con código de país (ej: 573001234567)'),
         blank=True,
         null=True
     )
@@ -77,11 +91,11 @@ class SellerProfile(models.Model):
 
 class Schedule(models.Model):
     DAYS_OF_WEEK = [
-        ('Lunes', 'Lunes'),
-        ('Martes', 'Martes'),
-        ('Miércoles', 'Miércoles'),
-        ('Jueves', 'Jueves'),
-        ('Viernes', 'Viernes')
+        ('Lunes', _('Lunes')),
+        ('Martes', _('Martes')),
+        ('Miércoles', _('Miércoles')),
+        ('Jueves', _('Jueves')),
+        ('Viernes', _('Viernes'))
     ]
 
     profile = models.ForeignKey(
@@ -92,23 +106,23 @@ class Schedule(models.Model):
     day = models.CharField(
         max_length=20,
         choices=DAYS_OF_WEEK,
-        verbose_name='Día'
+        verbose_name=_('Día')
     )
     is_available = models.BooleanField(
         default=True,
-        verbose_name='Disponible'
+        verbose_name=_('Disponible')
     )
     start_time = models.TimeField(
-        verbose_name='Hora de inicio',
+        verbose_name=_('Hora de inicio'),
         null=True,
         blank=True,
-        help_text='Horario de inicio (entre 6:00 AM y 9:30 PM, en intervalos de 30 minutos)'
+        help_text=_('Horario de inicio (entre 6:00 AM y 9:30 PM, en intervalos de 30 minutos)')
     )
     end_time = models.TimeField(
-        verbose_name='Hora de cierre',
+        verbose_name=_('Hora de cierre'),
         null=True,
         blank=True,
-        help_text='Horario de cierre (entre 6:30 AM y 10:00 PM, en intervalos de 30 minutos)'
+        help_text=_('Horario de cierre (entre 6:30 AM y 10:00 PM, en intervalos de 30 minutos)')
     )
 
     class Meta:

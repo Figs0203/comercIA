@@ -44,6 +44,17 @@ DEFAULT_KEYWORD_MAP = {
     "audifonos": "Tecnología",
     "audífonos": "Tecnología",
     "smartwatch": "Tecnología",
+    # libros
+    "libro": "Libros",
+    "libros": "Libros",
+    "novela": "Libros",
+    "novelas": "Libros",
+    "texto": "Libros",
+    "textos": "Libros",
+    "book": "Libros",
+    "books": "Libros",
+    "cuaderno": "Libros",
+    "cuadernos": "Libros",
 }
 
 def recommend_categories_from_text(text: str, keyword_map: dict | None = None) -> list[str]:

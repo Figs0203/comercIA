@@ -1,0 +1,544 @@
+================================================================================
+                    EXPLICACIÓN COMPLETA DEL SISTEMA COMERCIA
+                    Plataforma de Comercio Electrónico con IA
+================================================================================
+
+ÍNDICE:
+1. ARQUITECTURA GENERAL DEL SISTEMA
+2. SISTEMA DE AUTENTICACIÓN Y LOGIN
+3. BASE DE DATOS Y MODELOS
+4. SISTEMA DE PRODUCTOS
+5. INTEGRACIÓN CON API DE X (TWITTER)
+6. INTEGRACIÓN CON TELEGRAM
+7. INTEGRACIÓN CON GOOGLE GEMINI IA
+8. FLUJO DE DATOS Y PROCESAMIENTO
+9. DESPLIEGUE Y CONFIGURACIÓN
+
+================================================================================
+1. ARQUITECTURA GENERAL DEL SISTEMA
+================================================================================
+
+ComercIA es una plataforma de comercio electrónico desarrollada en Django 5.1.6 
+que utiliza la arquitectura MVT (Model-View-Template) y se integra con múltiples 
+APIs externas para proporcionar funcionalidades avanzadas.
+
+COMPONENTES PRINCIPALES:
+- Backend: Django 5.1.6 con Python 3.10+
+- Base de Datos: SQLite (desarrollo) / PostgreSQL (producción)
+- Frontend: Bootstrap 5 + JavaScript Vanilla
+- APIs Externas: Google Gemini 1.5 Flash, X API v2, Telegram Bot API
+- Despliegue: Render.com con soporte para ngrok
+
+APLICACIONES DJANGO:
+1. products/ - Gestión de productos y funcionalidades principales
+2. seller_profiles/ - Perfiles de vendedores y horarios
+3. social_ingestion/ - Ingesta de datos de redes sociales
+4. comercia/ - Configuración principal del proyecto
+
+================================================================================
+2. SISTEMA DE AUTENTICACIÓN Y LOGIN
+================================================================================
+
+FUNCIONAMIENTO DEL LOGIN:
+
+1. CONFIGURACIÓN EN SETTINGS.PY:
+   - LOGIN_URL = '/login/'
+   - LOGIN_REDIRECT_URL = 'home'
+   - LOGOUT_REDIRECT_URL = 'home'
+   - Usa el sistema de autenticación nativo de Django
+
+2. URLS DE AUTENTICACIÓN (comercia/urls.py):
+   - /login/ → LoginView.as_view() con template personalizado
+   - /logout/ → LogoutView.as_view() redirige a home
+   - /register/ → Vista personalizada para registro
+   - /password_reset/ → Sistema completo de recuperación de contraseña
+
+3. PROCESO DE LOGIN:
+   a) Usuario accede a /login/
+   b) Django presenta formulario con campos username y password
+   c) Al enviar, Django valida credenciales contra la base de datos
+   d) Si es válido, crea sesión y redirige a LOGIN_REDIRECT_URL
+   e) Si no es válido, muestra mensaje de error
+
+4. TEMPLATE DE LOGIN (products/templates/registration/login.html):
+   - Formulario con validación CSRF
+   - Campos: username, password
+   - Manejo de errores con mensajes personalizados
+   - Enlace a recuperación de contraseña
+   - Diseño responsivo con Bootstrap
+
+5. REGISTRO DE USUARIOS:
+   - Vista personalizada en products/views.py
+   - Usa UserCreationForm de Django
+   - Valida datos y crea nuevo usuario
+   - Redirige a login tras registro exitoso
+
+6. MIDDLEWARE DE AUTENTICACIÓN:
+   - AuthenticationMiddleware verifica sesiones
+   - SellerProfileMiddleware maneja perfiles de vendedores
+   - Protección de rutas con @login_required
+
+================================================================================
+3. BASE DE DATOS Y MODELOS
+================================================================================
+
+ESTRUCTURA DE LA BASE DE DATOS:
+
+1. MODELO USER (Django nativo):
+   - Campos: username, email, password, first_name, last_name
+   - Relación: OneToOne con SellerProfile
+   - Relación: ForeignKey con Product (como seller)
+   - Relación: ForeignKey con Comment, Favorite, ChatQuery
+
+2. MODELO PRODUCT (products/models.py):
+   Campos principales:
+   - name: CharField(255) - Nombre del producto
+   - category: CharField(50) - Categoría (Comida, Ropa, Tecnología, etc.)
+   - food_type: CharField(50) - Subtipo para comida (Panadería, Galletas, etc.)
+   - description: TextField - Descripción detallada
+   - price: DecimalField(10,2) - Precio en pesos colombianos
+   - condition: CharField(50) - Estado (Nuevo, Usado, Buen estado)
+   - image: ImageField - Imagen del producto
+   - seller: ForeignKey(User) - Vendedor
+   - available: BooleanField - Disponibilidad
+   - published_at: DateTimeField - Fecha de publicación
+
+   Validaciones:
+   - Si category='Comida', condition se establece en None
+   - Si category≠'Comida', food_type se establece en None
+   - Precio mínimo: 0.01
+
+   Métodos:
+   - average_rating: Calcula calificación promedio
+   - total_ratings: Cuenta total de calificaciones
+
+3. MODELO SELLERPROFILE (seller_profiles/models.py):
+   Campos:
+   - user: OneToOneField(User) - Usuario asociado
+   - profile_image: ImageField - Foto de perfil
+   - store_name: CharField(100) - Nombre de la tienda
+   - slogan: CharField(200) - Slogan de la tienda
+   - description: TextField - Descripción de la tienda
+   - whatsapp: CharField(15) - Número de WhatsApp
+
+   Validaciones:
+   - WhatsApp debe seguir formato: 57[3]xxxxxxxxx
+   - Método get_whatsapp_link() genera enlaces de WhatsApp
+
+4. MODELO SCHEDULE (seller_profiles/models.py):
+   Campos:
+   - profile: ForeignKey(SellerProfile)
+   - day: CharField(20) - Día de la semana
+   - is_available: BooleanField - Disponibilidad
+   - start_time: TimeField - Hora de inicio
+   - end_time: TimeField - Hora de cierre
+
+   Validaciones:
+   - Horarios entre 6:00 AM y 10:00 PM
+   - Intervalos de 30 minutos
+   - Mínimo 30 minutos entre inicio y cierre
+
+5. MODELO COMMENT (products/models.py):
+   Campos:
+   - product: ForeignKey(Product)
+   - user: ForeignKey(User)
+   - text: TextField(500) - Comentario
+   - rating: PositiveSmallIntegerField(0-5) - Calificación
+   - created_at: DateTimeField - Fecha de creación
+
+6. MODELO FAVORITE (products/models.py):
+   Campos:
+   - user: ForeignKey(User)
+   - product: ForeignKey(Product)
+   - created_at: DateTimeField
+   - Constraint: unique_together ['user', 'product']
+
+7. MODELO CHATQUERY (products/models.py):
+   Campos:
+   - query: TextField - Consulta en lenguaje natural
+   - processed_keywords: TextField - Palabras clave extraídas
+   - user: ForeignKey(User)
+   - created_at: DateTimeField
+   - success: BooleanField - Estado del procesamiento
+
+8. MODELO SOCIALPOST (social_ingestion/models.py):
+   Campos:
+   - platform: CharField(20) - Plataforma (x, telegram)
+   - post_id: CharField(255) - ID único del post
+   - author: CharField(255) - Autor del post
+   - text: TextField - Contenido del post
+   - published_at: DateTimeField - Fecha de publicación
+   - raw_payload: JSONField - Datos completos de la API
+   - matched_categories: CharField(255) - Categorías detectadas
+
+9. MODELO SOCIALACCOUNT (social_ingestion/models.py):
+   Campos:
+   - user: OneToOneField(User)
+   - platform: CharField(20) - Plataforma social
+   - username: CharField(255) - Username en la plataforma
+   - external_user_id: CharField(64) - ID externo
+   - created_at: DateTimeField
+
+10. MODELO SOCIALSOURCE (social_ingestion/models.py):
+    Campos:
+    - platform: CharField(20) - Plataforma a monitorear
+    - handle: CharField(255) - Identificador (usuario, canal, etc.)
+    - active: BooleanField - Estado activo
+    - created_at: DateTimeField
+
+================================================================================
+4. SISTEMA DE PRODUCTOS
+================================================================================
+
+GESTIÓN DE PRODUCTOS:
+
+1. AGREGAR PRODUCTO (products/views.py - add_product):
+   - Requiere autenticación (@login_required)
+   - Usa ProductForm (products/forms.py)
+   - Proceso:
+     a) Usuario accede a /add-product/
+     b) Completa formulario con datos del producto
+     c) Sube imagen del producto
+     d) Al guardar, se asigna automáticamente el seller=request.user
+     e) Se valida con clean() y save()
+     f) Redirige a home con mensaje de éxito
+
+2. EDICIÓN DE PRODUCTOS (products/views.py - edit_product):
+   - Solo el vendedor puede editar sus productos
+   - Verifica ownership: product.seller == request.user
+   - Usa el mismo ProductForm con datos existentes
+   - Mantiene la imagen original si no se sube nueva
+
+3. ELIMINACIÓN DE PRODUCTOS (products/views.py - delete_product):
+   - Solo el vendedor puede eliminar sus productos
+   - Verifica ownership antes de eliminar
+   - Elimina también la imagen del sistema de archivos
+
+4. DETALLE DE PRODUCTO (products/views.py - product_detail):
+   - Muestra información completa del producto
+   - Incluye comentarios y calificaciones
+   - Botón de WhatsApp para contacto directo
+   - Sistema de favoritos
+   - Botón para agregar comentarios
+
+5. BÚSQUEDA DE PRODUCTOS:
+   - Búsqueda tradicional por nombre y categoría
+   - Búsqueda inteligente con IA (chat_search)
+   - Filtros por categoría, precio, disponibilidad
+   - Ordenamiento por fecha, precio, calificación
+
+6. SISTEMA DE COMENTARIOS:
+   - Usuarios autenticados pueden comentar
+   - Calificación de 0 a 5 estrellas
+   - Validación de longitud máxima (500 caracteres)
+   - Ordenamiento por fecha (más recientes primero)
+
+7. SISTEMA DE FAVORITOS:
+   - Usuarios pueden marcar productos como favoritos
+   - Constraint único por usuario-producto
+   - Vista de lista de favoritos
+   - Botón toggle en cada producto
+
+================================================================================
+5. INTEGRACIÓN CON API DE X (TWITTER)
+================================================================================
+
+CONFIGURACIÓN Y FUNCIONAMIENTO:
+
+1. CONFIGURACIÓN EN SETTINGS.PY:
+   - X_BEARER_TOKEN: Token de autenticación de X API v2
+   - X_USER_ID: ID del usuario a monitorear
+   - X_USERNAME: Username alternativo
+   - X_MAX_RESULTS: Límite de tweets por petición (default: 3)
+
+2. OBTENCIÓN DE CREDENCIALES:
+   a) Ir a https://developer.twitter.com/en/portal/dashboard
+   b) Crear app o usar existente
+   c) Obtener Bearer Token con permisos de lectura
+   d) Obtener User ID desde https://tweeterid.com/
+
+3. COMANDO DE INGESTA (social_ingestion/management/commands/fetch_social.py):
+   - Comando: python manage.py fetch_social --platform x
+   - Opciones: --dry-run, --no-since, --debug, --include-retweets
+   - Proceso:
+     a) Obtiene cuentas configuradas desde SocialAccount
+     b) Hace petición a X API v2 con Bearer Token
+     c) Procesa respuesta JSON
+     d) Categoriza tweets usando IA
+     e) Guarda en SocialPost
+
+4. API ENDPOINTS UTILIZADOS:
+   - GET /2/users/by/username/{username} - Obtener ID de usuario
+   - GET /2/users/{id}/tweets - Obtener tweets del usuario
+   - Parámetros: max_results, tweet.fields, user.fields
+
+5. PROCESAMIENTO DE TWEETS:
+   - Extrae texto, fecha, autor, ID
+   - Usa Gemini IA para categorizar contenido
+   - Detecta categorías: Comida, Ropa, Tecnología, Libros, Otros
+   - Guarda en SocialPost con matched_categories
+
+6. RATE LIMITING:
+   - X API v2: 300 requests/15min para cuentas gratuitas
+   - Implementa backoff exponencial en caso de límite
+   - Manejo de errores 429 (Too Many Requests)
+
+7. VISTA DE CONEXIÓN (social_ingestion/views.py - connect_x):
+   - Usuarios pueden conectar su cuenta de X
+   - Formulario para ingresar username
+   - Valida username con X API
+   - Crea/actualiza SocialAccount
+
+8. RECOMENDACIONES BASADAS EN X:
+   - Vista recommendations() muestra tweets categorizados
+   - Filtra por categorías de interés del usuario
+   - Muestra tweets relevantes para productos
+
+================================================================================
+6. INTEGRACIÓN CON TELEGRAM
+================================================================================
+
+CONFIGURACIÓN Y FUNCIONAMIENTO:
+
+1. CONFIGURACIÓN:
+   - TELEGRAM_BOT_TOKEN: Token del bot de Telegram
+   - Se obtiene de @BotFather en Telegram
+   - Bot debe ser administrador del canal/grupo a monitorear
+
+2. COMANDO DE CONFIGURACIÓN (social_ingestion/management/commands/setup_telegram.py):
+   - python manage.py setup_telegram --chat-id "-1001234567890" --name "Canal"
+   - python manage.py setup_telegram --list (listar fuentes)
+   - python manage.py setup_telegram --remove 1 (eliminar fuente)
+
+3. OBTENCIÓN DE CHAT ID:
+   - Método 1: Usar @userinfobot
+   - Método 2: API de Telegram getUpdates
+   - Método 3: Usar @RawDataBot
+   - Formatos: Grupos (-100xxxxxxxxx), Canales (-100xxxxxxxxx), Privados (xxxxxxxxx)
+
+4. COMANDO DE INGESTA:
+   - python manage.py fetch_social --platform telegram
+   - Proceso:
+     a) Obtiene fuentes activas de SocialSource
+     b) Hace petición a Telegram Bot API
+     c) Endpoint: https://api.telegram.org/bot{token}/getUpdates
+     d) Procesa mensajes de texto
+     e) Categoriza con IA
+     f) Guarda en SocialPost
+
+5. API ENDPOINTS UTILIZADOS:
+   - GET /getUpdates - Obtener mensajes nuevos
+   - Parámetros: chat_id, limit, offset
+   - Manejo de offset para evitar duplicados
+
+6. PROCESAMIENTO DE MENSAJES:
+   - Extrae texto, fecha, chat_id, message_id
+   - Filtra solo mensajes de texto
+   - Usa IA para categorizar contenido
+   - Guarda en SocialPost con platform="telegram"
+
+7. LIMITACIONES:
+   - Solo procesa mensajes de texto
+   - Bot debe ser admin del canal/grupo
+   - Límites de rate limiting de Telegram
+   - Máximo 20 mensajes por petición
+
+================================================================================
+7. INTEGRACIÓN CON GOOGLE GEMINI IA
+================================================================================
+
+CONFIGURACIÓN Y FUNCIONAMIENTO:
+
+1. CONFIGURACIÓN:
+   - GEMINI_API_KEY: Clave de API de Google Gemini
+   - Modelo: gemini-1.5-flash
+   - Endpoint: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
+
+2. PROCESADOR DE IA (products/gemini_processor.py):
+   - Clase GeminiProcessor
+   - Método process_query() para procesar consultas
+   - Método recommend_categories_from_text() para categorizar contenido
+
+3. PROCESAMIENTO DE CONSULTAS (chat_search):
+   - Usuario envía consulta en lenguaje natural
+   - Gemini IA extrae palabras clave relevantes
+   - Prompt personalizado para búsqueda de productos
+   - Respuesta: palabras clave separadas por comas
+
+4. CATEGORIZACIÓN DE CONTENIDO:
+   - Procesa tweets y mensajes de Telegram
+   - Detecta categorías: Comida, Ropa, Tecnología, Libros, Otros
+   - Usa prompt optimizado para clasificación
+   - Guarda categorías en matched_categories
+
+5. PROMPT PARA BÚSQUEDA:
+   ```
+   Eres un asistente que convierte consultas en lenguaje natural a palabras clave 
+   relevantes para búsqueda de productos.
+   
+   Tu tarea es:
+   1. Identificar la intención principal del usuario
+   2. Extraer 3-5 palabras clave relevantes
+   3. Responder SOLAMENTE con palabras clave separadas por comas
+   ```
+
+6. PROMPT PARA CATEGORIZACIÓN:
+   ```
+   Clasifica el siguiente texto en una de estas categorías: Comida, Ropa, 
+   Tecnología, Libros, Otros. Responde solo con el nombre de la categoría.
+   ```
+
+7. MANEJO DE ERRORES:
+   - Timeout de 30 segundos
+   - Retry automático en caso de fallo
+   - Fallback a búsqueda tradicional si IA falla
+   - Logging de errores para debugging
+
+8. ALMACENAMIENTO DE CONSULTAS:
+   - Todas las consultas se guardan en ChatQuery
+   - Incluye query original, palabras clave procesadas, usuario
+   - Campo success indica si el procesamiento fue exitoso
+   - Útil para análisis y mejora del sistema
+
+================================================================================
+8. FLUJO DE DATOS Y PROCESAMIENTO
+================================================================================
+
+FLUJO GENERAL DEL SISTEMA:
+
+1. INGESTA DE DATOS SOCIALES:
+   a) Comando fetch_social se ejecuta (manual o automático)
+   b) Obtiene fuentes activas de SocialSource
+   c) Hace peticiones a APIs externas (X, Telegram)
+   d) Procesa respuestas JSON
+   e) Categoriza contenido con Gemini IA
+   f) Guarda en SocialPost
+
+2. BÚSQUEDA INTELIGENTE:
+   a) Usuario envía consulta en lenguaje natural
+   b) Gemini IA procesa consulta y extrae palabras clave
+   c) Sistema busca productos usando palabras clave
+   d) Retorna resultados relevantes
+   e) Guarda consulta en ChatQuery
+
+3. GESTIÓN DE PRODUCTOS:
+   a) Vendedor agrega producto con formulario
+   b) Sistema valida datos y guarda en Product
+   c) Imagen se almacena en media/products/
+   d) Producto aparece en catálogo público
+   e) Compradores pueden ver, comentar, marcar favoritos
+
+4. SISTEMA DE RECOMENDACIONES:
+   a) Sistema analiza tweets/mensajes categorizados
+   b) Filtra por categorías de interés del usuario
+   c) Muestra contenido relevante en vista recommendations
+   d) Usuario puede ver productos relacionados
+
+5. CONTACTO VÍA WHATSAPP:
+   a) Usuario hace clic en botón WhatsApp
+   b) Sistema genera enlace con mensaje personalizado
+   c) Registra clic en ProfileClick para estadísticas
+   d) Abre WhatsApp con mensaje pre-escrito
+
+================================================================================
+9. DESPLIEGUE Y CONFIGURACIÓN
+================================================================================
+
+CONFIGURACIÓN DE DESARROLLO:
+
+1. VARIABLES DE ENTORNO (.env):
+   ```
+   SECRET_KEY=clave_segura_django
+   DEBUG=1
+   GEMINI_API_KEY=tu_api_key_gemini
+   X_BEARER_TOKEN=tu_bearer_token_x
+   X_USER_ID=1234567890
+   X_MAX_RESULTS=3
+   TELEGRAM_BOT_TOKEN=tu_token_telegram
+   ```
+
+2. INSTALACIÓN:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/Mac
+   venv\Scripts\activate     # Windows
+   pip install -r requirements.txt
+   python manage.py migrate
+   python manage.py createsuperuser
+   python manage.py runserver
+   ```
+
+3. CONFIGURACIÓN DE NGROK (para desarrollo):
+   - Comando: python manage.py start_ngrok
+   - Crea túnel público para testing
+   - Configura CSRF_TRUSTED_ORIGINS automáticamente
+
+DESPLIEGUE EN PRODUCCIÓN (Render.com):
+
+1. CONFIGURACIÓN EN RENDER.YAML:
+   - Servicio web con Python 3.10+
+   - Variables de entorno configuradas
+   - Comando de inicio: gunicorn comercia.wsgi:application
+   - Puerto: 10000
+
+2. BASE DE DATOS:
+   - SQLite para desarrollo
+   - PostgreSQL para producción (configurado en Render)
+   - Migraciones automáticas en despliegue
+
+3. ARCHIVOS ESTÁTICOS:
+   - WhiteNoise para servir archivos estáticos
+   - Compresión automática de CSS/JS
+   - Configuración en STATICFILES_STORAGE
+
+4. SEGURIDAD:
+   - CSRF_COOKIE_SECURE = True
+   - SESSION_COOKIE_SECURE = True
+   - ALLOWED_HOSTS configurado para dominio de producción
+
+COMANDOS ÚTILES:
+
+1. INGESTA DE DATOS:
+   ```bash
+   # Probar sin guardar
+   python manage.py fetch_social --platform x --dry-run
+   python manage.py fetch_social --platform telegram --dry-run
+   
+   # Guardar en base de datos
+   python manage.py fetch_social --platform x
+   python manage.py fetch_social --platform telegram
+   ```
+
+2. CONFIGURACIÓN DE TELEGRAM:
+   ```bash
+   python manage.py setup_telegram --list
+   python manage.py setup_telegram --chat-id "-1001234567890" --name "Canal"
+   ```
+
+3. CREAR FUENTES DE PRUEBA:
+   ```bash
+   python manage.py create_test_sources
+   ```
+
+================================================================================
+CONCLUSIONES TÉCNICAS
+================================================================================
+
+ComercIA es un sistema robusto que integra múltiples tecnologías:
+
+1. ARQUITECTURA: Django MVT con separación clara de responsabilidades
+2. BASE DE DATOS: Modelos bien estructurados con validaciones y relaciones
+3. APIS EXTERNAS: Integración exitosa con X, Telegram y Gemini IA
+4. SEGURIDAD: Autenticación, autorización y validación de datos
+5. ESCALABILIDAD: Preparado para producción con Render.com
+6. MANTENIBILIDAD: Código bien documentado y estructurado
+
+El sistema demuestra competencia en:
+- Desarrollo web con Django
+- Integración de APIs externas
+- Procesamiento de lenguaje natural con IA
+- Gestión de base de datos relacional
+- Despliegue en la nube
+- Experiencia de usuario moderna
+
+================================================================================

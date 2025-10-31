@@ -6,11 +6,16 @@ import re
 class SellerProfileForm(forms.ModelForm):
     class Meta:
         model = SellerProfile
-        fields = ['profile_image', 'store_name', 'slogan', 'description', 'whatsapp']
+        fields = ['profile_image', 'store_name', 'slogan', 'slogan_en', 'description', 'description_en', 'whatsapp']
         widgets = {
             'store_name': forms.TextInput(attrs={'class': 'form-control'}),
             'slogan': forms.TextInput(attrs={'class': 'form-control'}),
+            'slogan_en': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4
+            }),
+            'description_en': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 4
             }),
@@ -23,7 +28,9 @@ class SellerProfileForm(forms.ModelForm):
         help_texts = {
             'store_name': 'Nombre visible de tu negocio para los compradores.',
             'slogan': 'Una frase corta que describa tu negocio (opcional).',
+            'slogan_en': 'English version of your slogan (optional).',
             'description': 'Describe tu negocio, qué productos vendes y cualquier información relevante para tus clientes.',
+            'description_en': 'Describe your business in English (optional).',
             'profile_image': 'Sube una imagen de tu logo o perfil (opcional).',
             'whatsapp': 'Número de WhatsApp para contacto (opcional). Formato: 573001234567.'
         }

@@ -10,3 +10,17 @@ class ConnectXForm(forms.Form):
     )
 
 
+class UserInterestForm(forms.Form):
+    """Formulario para que usuarios expresen sus intereses"""
+    text = forms.CharField(
+        label="¿Qué te interesa?",
+        help_text="Escribe como en X: 'me gustan las manzanas', 'busco libros de ciencia', etc.",
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'placeholder': 'Ej: me gustan las manzanas, busco libros de ciencia, necesito ropa deportiva...',
+            'class': 'form-control'
+        }),
+        max_length=500,
+    )
+
+

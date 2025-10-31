@@ -23,13 +23,20 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.views.static import serve
+from django.conf.urls.i18n import i18n_patterns
+from django.urls import include
 
-urlpatterns = [
+urlpatterns = [path('i18n/', include('django.conf.urls.i18n'))]
+
+urlpatterns += i18n_patterns(
     # Admin
     path('admin/', admin.site.urls),
     
     # Products app URLs
     path('', products_views.home, name='home'),
+    path('api/products/', products_views.products_api, name='products_api'),
+    path('productos-aliados/', products_views.aliados_list, name='aliados_list'),
+    path('reporte/descargar/', products_views.download_report, name='download_report'),
     path('add-product/', products_views.add_product, name='add_product'),
     path('edit-product/<int:product_id>/', products_views.edit_product, name='edit_product'),
     path('delete-product/<int:product_id>/', products_views.delete_product, name='delete_product'),
@@ -76,10 +83,11 @@ urlpatterns = [
     # Social ingestion URLs
     path('connect-x/', social_views.connect_x, name='connect_x'),
     path('recomendaciones/', social_views.recommendations, name='recommendations'),
+    path('mis-intereses/', social_views.add_interest, name='add_interest'),
     
     # Development URLs
     path('start-ngrok/', products_views.start_ngrok_view, name='start_ngrok'),
-]
+)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

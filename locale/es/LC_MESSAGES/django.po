@@ -1,0 +1,430 @@
+# SOME DESCRIPTIVE TITLE.
+msgid ""
+msgstr ""
+"Project-Id-Version: ComercIA\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-31 10:21-0500\n"
+"PO-Revision-Date: 2025-10-31 00:00+0000\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\products\templates\products\add_product.html:5
+#: .\products\templates\products\add_product.html:15
+msgid "Agregar Producto"
+msgstr ""
+
+#: .\products\templates\products\add_product.html:17
+msgid "Completa el formulario para publicar tu producto"
+msgstr ""
+
+#: .\products\templates\products\add_product.html:131
+msgid "Selecciona una imagen"
+msgstr ""
+
+#: .\products\templates\products\add_product.html:146
+#: .\products\templates\products\home.html:809
+#, fuzzy
+#| msgid "Publicar"
+msgid "Publicar Producto"
+msgstr "Publicar"
+
+#: .\products\templates\products\add_product.html:149
+#: .\products\templates\products\edit_product.html:284
+msgid "Cancelar"
+msgstr ""
+
+#: .\products\templates\products\aliados.html:4
+#: .\products\templates\products\aliados.html:8
+msgid "Productos Aliados"
+msgstr ""
+
+#: .\products\templates\products\aliados.html:9
+msgid "Volver"
+msgstr ""
+
+#: .\products\templates\products\aliados.html:30
+msgid "Ver"
+msgstr ""
+
+#: .\products\templates\products\aliados.html:37
+msgid "No se encontraron productos aliados."
+msgstr ""
+
+#: .\products\templates\products\base.html:265
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:5
+msgid "Vendedores"
+msgstr "Vendedores"
+
+#: .\products\templates\products\base.html:270
+msgid "Recomendaciones"
+msgstr "Recomendaciones"
+
+#: .\products\templates\products\base.html:275
+msgid "Idioma"
+msgstr "Idioma"
+
+#: .\products\templates\products\base.html:297
+msgid "Favoritos"
+msgstr "Favoritos"
+
+#: .\products\templates\products\base.html:302
+msgid "Publicar"
+msgstr "Publicar"
+
+#: .\products\templates\products\base.html:312
+msgid "Conectar con X"
+msgstr "Conectar con X"
+
+#: .\products\templates\products\base.html:317
+msgid "Mi Perfil de Vendedor"
+msgstr "Mi Perfil de Vendedor"
+
+#: .\products\templates\products\base.html:325
+msgid "Cerrar Sesión"
+msgstr "Cerrar Sesión"
+
+#: .\products\templates\products\base.html:334
+msgid "Iniciar Sesión"
+msgstr "Iniciar Sesión"
+
+#: .\products\templates\products\base.html:339
+msgid "Registrarse"
+msgstr "Registrarse"
+
+#: .\products\templates\products\edit_product.html:5
+#: .\products\templates\products\edit_product.html:104
+msgid "Editar Producto"
+msgstr ""
+
+#: .\products\templates\products\edit_product.html:106
+msgid "Actualiza la información de tu producto"
+msgstr ""
+
+#: .\products\templates\products\edit_product.html:251
+msgid "Cambiar imagen"
+msgstr ""
+
+#: .\products\templates\products\edit_product.html:253
+msgid "Seleccionar imagen"
+msgstr ""
+
+#: .\products\templates\products\edit_product.html:262
+msgid "Imagen actual:"
+msgstr ""
+
+#: .\products\templates\products\edit_product.html:281
+msgid "Guardar Cambios"
+msgstr ""
+
+#: .\products\templates\products\favorites.html:5
+#: .\products\templates\products\favorites.html:256
+#, fuzzy
+#| msgid "Favoritos"
+msgid "Mis Favoritos"
+msgstr "Favoritos"
+
+#: .\products\templates\products\favorites.html:257
+msgid "Aquí encontrarás todos los productos que has marcado como favoritos"
+msgstr ""
+
+#: .\products\templates\products\favorites.html:268
+msgid "Eliminar de favoritos"
+msgstr ""
+
+#: .\products\templates\products\favorites.html:292
+#: .\products\templates\products\home.html:1027
+#: .\products\templates\products\product_detail.html:544
+msgid "Disponible"
+msgstr ""
+
+#: .\products\templates\products\favorites.html:296
+#: .\products\templates\products\home.html:1029
+#: .\products\templates\products\product_detail.html:544
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:73
+msgid "No disponible"
+msgstr ""
+
+#: .\products\templates\products\favorites.html:308
+msgid "No tienes favoritos"
+msgstr ""
+
+#: .\products\templates\products\favorites.html:309
+msgid "Encuentra productos que te gusten y agrégalos a tus favoritos"
+msgstr ""
+
+#: .\products\templates\products\favorites.html:311
+msgid "Explorar productos"
+msgstr ""
+
+#: .\products\templates\products\home.html:5
+msgid "Inicio"
+msgstr ""
+
+#: .\products\templates\products\home.html:795
+msgid "¡Bienvenido a ComercIA!"
+msgstr ""
+
+#: .\products\templates\products\home.html:796
+msgid "Tu marketplace inteligente con recomendaciones personalizadas"
+msgstr ""
+
+#: .\products\templates\products\home.html:797
+msgid ""
+"Descubre productos perfectos para ti basados en tus intereses y "
+"publicaciones de redes sociales. Conectamos con X y Telegram para ofrecerte "
+"las mejores recomendaciones."
+msgstr ""
+
+#: .\products\templates\products\home.html:802
+msgid "Comenzar como vendedor"
+msgstr ""
+
+#: .\products\templates\products\home.html:805
+#: .\products\templates\products\home.html:815
+msgid "Unirse al grupo"
+msgstr ""
+
+#: .\products\templates\products\home.html:812
+#, fuzzy
+#| msgid "Recomendaciones"
+msgid "Ver Recomendaciones"
+msgstr "Recomendaciones"
+
+#: .\products\templates\products\home.html:829
+msgid "¿Cómo funciona ComercIA?"
+msgstr ""
+
+#: .\products\templates\products\home.html:830
+msgid ""
+"Una plataforma inteligente que conecta tus intereses con productos perfectos"
+msgstr ""
+
+#: .\products\templates\products\home.html:841
+msgid "Expresa tus intereses"
+msgstr ""
+
+#: .\products\templates\products\home.html:842
+msgid ""
+"Escribe lo que te gusta como en X: 'me gustan las manzanas' o 'busco libros "
+"de ciencia'"
+msgstr ""
+
+#: .\products\templates\products\home.html:853
+msgid "Conecta tus redes"
+msgstr ""
+
+#: .\products\templates\products\home.html:854
+msgid ""
+"Vincula tu cuenta de X para que detectemos automáticamente tus publicaciones"
+msgstr ""
+
+#: .\products\templates\products\home.html:865
+#, fuzzy
+#| msgid "Recomendaciones"
+msgid "Recibe recomendaciones"
+msgstr "Recomendaciones"
+
+#: .\products\templates\products\home.html:866
+msgid ""
+"Obtén sugerencias personalizadas de productos que realmente te interesan"
+msgstr ""
+
+#: .\products\templates\products\home.html:886
+msgid "Buscar productos..."
+msgstr ""
+
+#: .\products\templates\products\home.html:902
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:77
+msgid "Filtros"
+msgstr ""
+
+#: .\products\templates\products\home.html:913
+msgid "Categoría"
+msgstr ""
+
+#: .\products\templates\products\home.html:916
+msgid "Todas las categorías"
+msgstr ""
+
+#: .\products\templates\products\home.html:927
+msgid "Todos los tipos"
+msgstr ""
+
+#: .\products\templates\products\home.html:940
+msgid "Rango de precios"
+msgstr ""
+
+#: .\products\templates\products\home.html:950
+msgid "Mínimo"
+msgstr ""
+
+#: .\products\templates\products\home.html:962
+msgid "Máximo"
+msgstr ""
+
+#: .\products\templates\products\home.html:984
+msgid "Resultados de búsqueda"
+msgstr ""
+
+#: .\products\templates\products\home.html:986
+msgid "Todos los productos"
+msgstr ""
+
+#: .\products\templates\products\home.html:1015
+#: .\products\templates\products\product_detail.html:597
+msgid "Quitar de favoritos"
+msgstr ""
+
+#: .\products\templates\products\home.html:1015
+#: .\products\templates\products\product_detail.html:597
+msgid "Agregar a favoritos"
+msgstr ""
+
+#: .\products\templates\products\home.html:1048
+msgid "No se encontraron productos"
+msgstr ""
+
+#: .\products\templates\products\home.html:1050
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:161
+msgid "Intenta con otros términos de búsqueda o filtros"
+msgstr ""
+
+#: .\products\templates\products\home.html:1052
+msgid "Ver todos los productos"
+msgstr ""
+
+#: .\products\templates\products\home.html:1055
+msgid "Sé el primero en publicar un producto"
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:551
+msgid "reseñas"
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:587
+msgid "Editar producto"
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:590
+msgid "Eliminar producto"
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:606
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:28
+msgid "Contactar por WhatsApp"
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:619
+msgid "Comentarios y Calificaciones"
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:628
+msgid "Calificación:"
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:639
+msgid "Por favor, selecciona una calificación."
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:643
+msgid "Escribe tu comentario aquí..."
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:646
+msgid "Publicar Comentario"
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:653
+#, fuzzy
+#| msgid "Iniciar Sesión"
+msgid "Inicia sesión"
+msgstr "Iniciar Sesión"
+
+#: .\products\templates\products\product_detail.html:653
+msgid "para dejar un comentario."
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:676
+msgid "Eliminar"
+msgstr ""
+
+#: .\products\templates\products\product_detail.html:682
+msgid "No hay comentarios aún. ¡Sé el primero en comentar!"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:38
+msgid "Descripción"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:49
+msgid "Horario de Atención"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:56
+msgid "Día"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:57
+msgid "Horario"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:89
+msgid "personas han visto este perfil."
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:95
+msgid "Productos de"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:113
+msgid "Ver detalles"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\public_profile.html:122
+msgid "Este vendedor aún no tiene productos disponibles."
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:10
+msgid "Explora Nuestros Vendedores"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:11
+msgid "Descubre la variedad de tiendas y productos disponibles en ComercIA"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:16
+msgid "Vendedores Más Populares"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:61
+#, fuzzy
+#| msgid "Vendedores"
+msgid "Buscar vendedores..."
+msgstr "Vendedores"
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:89
+msgid "Filtrar por categorías de productos"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:101
+msgid "Selecciona múltiples categorías con la tecla Ctrl"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:105
+msgid "Aplicar filtros"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:108
+msgid "Limpiar filtros"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:159
+msgid "No se encontraron vendedores"
+msgstr ""
+
+#: .\seller_profiles\templates\seller_profiles\seller_list.html:163
+msgid "Ver todos los vendedores"
+msgstr ""

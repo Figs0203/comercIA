@@ -1,7 +1,8 @@
 {% extends 'products/base.html' %}
 {% load form_tags %}
+{% load i18n %}
 
-{% block title %}Agregar Producto - ComercIA{% endblock %}
+{% block title %}{% trans "Agregar Producto" %} - ComercIA{% endblock %}
 
 {% block content %}
 <section class="py-5">
@@ -11,9 +12,9 @@
                 <div class="card form-card">
                     <div class="card-header text-center">
                         <h2 class="mb-0 fw-bold">
-                            <i class="fas fa-plus-circle me-2"></i>Agregar Producto
+                            <i class="fas fa-plus-circle me-2"></i>{% trans "Agregar Producto" %}
                         </h2>
-                        <p class="text-muted mt-2 mb-0">Completa el formulario para publicar tu producto</p>
+                        <p class="text-muted mt-2 mb-0">{% trans "Completa el formulario para publicar tu producto" %}</p>
                     </div>
                     
                     <div class="card-body p-4 p-lg-5">
@@ -127,7 +128,7 @@
                                 <div class="input-file-container">
                                     {{ form.image|addclass:"form-control" }}
                                     <div class="input-file-placeholder">
-                                        <i class="fas fa-cloud-upload-alt me-2"></i>Selecciona una imagen
+                                        <i class="fas fa-cloud-upload-alt me-2"></i>{% trans "Selecciona una imagen" %}
                                     </div>
                                 </div>
                                 {% if form.image.help_text %}
@@ -142,10 +143,10 @@
                             
                             <div class="d-flex gap-3 mt-5">
                                 <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
-                                    <i class="fas fa-check me-2"></i>Publicar Producto
+                                    <i class="fas fa-check me-2"></i>{% trans "Publicar Producto" %}
                                 </button>
                                 <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg">
-                                    <i class="fas fa-times me-2"></i>Cancelar
+                                    <i class="fas fa-times me-2"></i>{% trans "Cancelar" %}
                                 </a>
                             </div>
                         </form>

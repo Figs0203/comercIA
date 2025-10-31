@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load i18n %}
     <title>{% block title %}ComercIA{% endblock %}</title>
     
     <!-- Fuentes Google -->
@@ -261,23 +262,44 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'seller_list' %}">
-                            <i class="fas fa-store me-1"></i>Vendedores
+                            <i class="fas fa-store me-1"></i>{% trans "Vendedores" %}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'recommendations' %}">
-                            <i class="fas fa-lightbulb me-1"></i>Recomendaciones
+                            <i class="fas fa-lightbulb me-1"></i>{% trans "Recomendaciones" %}
                         </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-globe me-1"></i>{% trans "Idioma" %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post" class="dropdown-item p-0">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button name="language" value="es" class="btn btn-link text-decoration-none w-100 text-start">🇪🇸 Español</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post" class="dropdown-item p-0">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button name="language" value="en" class="btn btn-link text-decoration-none w-100 text-start">🇺🇸 English</button>
+                                </form>
+                            </li>
+                        </ul>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'favorites_list' %}">
-                                <i class="fas fa-heart me-1"></i>Favoritos
+                                <i class="fas fa-heart me-1"></i>{% trans "Favoritos" %}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'add_product' %}">
-                                <i class="fas fa-plus me-1"></i>Publicar
+                                <i class="fas fa-plus me-1"></i>{% trans "Publicar" %}
                             </a>
                         </li>
                         <li class="nav-item dropdown">
@@ -287,12 +309,12 @@
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
                                     <a href="{% url 'connect_x' %}" class="dropdown-item">
-                                        <i class="fab fa-x-twitter me-2"></i>Conectar con X
+                                        <i class="fab fa-x-twitter me-2"></i>{% trans "Conectar con X" %}
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{% url 'view_profile' %}" class="dropdown-item">
-                                        <i class="fas fa-store me-2"></i>Mi Perfil de Vendedor
+                                        <i class="fas fa-store me-2"></i>{% trans "Mi Perfil de Vendedor" %}
                                     </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
@@ -300,7 +322,7 @@
                                     <form action="{% url 'logout' %}" method="post" class="dropdown-item">
                                         {% csrf_token %}
                                         <button type="submit" class="btn btn-link text-decoration-none p-0">
-                                            <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                                            <i class="fas fa-sign-out-alt me-2"></i>{% trans "Cerrar Sesión" %}
                                         </button>
                                     </form>
                                 </li>
@@ -309,12 +331,12 @@
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'login' %}">
-                                <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
+                                <i class="fas fa-sign-in-alt me-1"></i>{% trans "Iniciar Sesión" %}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'register' %}">
-                                <i class="fas fa-user-plus me-1"></i>Registrarse
+                                <i class="fas fa-user-plus me-1"></i>{% trans "Registrarse" %}
                             </a>
                         </li>
                     {% endif %}
