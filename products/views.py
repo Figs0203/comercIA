@@ -424,3 +424,52 @@ def download_report(request):
     response = HttpResponse(content, content_type=content_type)
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
+
+
+def productos_externos(request):
+    """Consume la API externa de productos y muestra los resultados en tarjetas"""
+    api_url = 'http://54.158.38.201/es/api/productos/'
+    productos = []
+    error = None
+    
+    try:
+        # Realizar petición GET a la API externa
+        response = requests.get(api_url, timeout=10)
+        response.raise_for_status()  # Lanza excepción si hay error HTTP
+        
+        # Procesar la respuesta JSON
+        data = response.json()
+        
+        # La API puede devolver los datos en diferentes formatos
+        # Intentamos obtener 'results' si existe, sino usamos el objeto completo
+        if isinstance(data, dict):
+            # Buscar productos en diferentes claves posibles
+            productos = data.get('results', data.get('productos', data.get('data', [])))
+            # Asegurar que productos sea una lista
+            if not isinstance(productos, list):
+                productos = [productos] if productos else []
+        elif isinstance(data, list):
+            productos = data
+        else:
+            productos = []
+        
+        # Asegurar que todos los elementos sean diccionarios
+        if productos:
+            if not isinstance(productos[0], dict):
+                productos = []
+            
+    except requests.exceptions.Timeout:
+        error = 'La solicitud a la API externa tardó demasiado tiempo.'
+    except requests.exceptions.ConnectionError:
+        error = 'No se pudo conectar con la API externa. Por favor, inténtalo más tarde.'
+    except requests.exceptions.HTTPError as e:
+        error = f'Error HTTP al consultar la API: {e}'
+    except ValueError as e:
+        error = f'Error al procesar la respuesta JSON: {e}'
+    except Exception as e:
+        error = f'Error inesperado: {str(e)}'
+    
+    return render(request, 'products/productos.html', {
+        'productos': productos,
+        'error': error
+    })

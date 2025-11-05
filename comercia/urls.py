@@ -36,6 +36,7 @@ urlpatterns += i18n_patterns(
     path('', products_views.home, name='home'),
     path('api/products/', products_views.products_api, name='products_api'),
     path('productos-aliados/', products_views.aliados_list, name='aliados_list'),
+    path('productos/', products_views.productos_externos, name='productos_externos'),
     path('reporte/descargar/', products_views.download_report, name='download_report'),
     path('add-product/', products_views.add_product, name='add_product'),
     path('edit-product/<int:product_id>/', products_views.edit_product, name='edit_product'),
