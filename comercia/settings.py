@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-m92g&dlk@zvmt)r^eaxjodws)#
 DEBUG = os.getenv('DEBUG', '1') not in ['0', 'false', 'False'] and 'RENDER' not in os.environ
 
 # Permitir conexiones desde otros dispositivos en la red local y ngrok
-ALLOWED_HOSTS = ['52.23.157.224', '127.0.0.1', 'localhost', '54.236.7.151', '3.80.139.146']
+ALLOWED_HOSTS = ['52.23.157.224', '127.0.0.1', 'localhost', '54.236.7.151', '3.80.139.146', '98.91.29.3']
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
